@@ -1,7 +1,7 @@
 # leviathan
 C++ Big Data Solution
 
-> I would like to provide a more convenient and convenient c++ library
+> I would like to provide a more easy-to-use and convenient c++ library
 
 > I still have so many things to do
 
