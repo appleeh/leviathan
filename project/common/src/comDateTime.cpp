@@ -67,7 +67,7 @@ int CFileTime::setFileTime(TCHAR *pFilePath)
 	FileTimeToSystemTime(&ftWrite, &sysTm);  // UTC SystemTime
 	//SystemTimeToTzSpecificLocalTime(NULL, &sysTm, &localTime);	// KTC LocalTime
 
-	_stprintf(szDate, "%02d%02d%02d%02d%02d", sysTm.wMonth, sysTm.wDay, sysTm.wHour, sysTm.wMinute, sysTm.wSecond);
+	_stprintf(szDate, "%d%02d%02d%02d%02d", sysTm.wMonth, sysTm.wDay, sysTm.wHour, sysTm.wMinute, sysTm.wSecond);
 	m_nDateTime = atoi(szDate);
 	_stprintf(szDate, "%04d", sysTm.wYear);
 	m_nYear = atoi(szDate);
@@ -80,7 +80,7 @@ int CFileTime::setFileTime(FILETIME *pftWrite)
 
 	SYSTEMTIME	sysTm;
 	FileTimeToSystemTime(pftWrite, &sysTm);
-	_stprintf(szDate, "%02d%02d%02d%02d%02d", sysTm.wMonth, sysTm.wDay, sysTm.wHour, sysTm.wMinute, sysTm.wSecond);
+	_stprintf(szDate, "%d%02d%02d%02d%02d", sysTm.wMonth, sysTm.wDay, sysTm.wHour, sysTm.wMinute, sysTm.wSecond);
 	m_nDateTime = atoi(szDate);
 	_stprintf(szDate, "%04d", sysTm.wYear);
 	m_nYear = atoi(szDate);
@@ -100,12 +100,22 @@ bool setLocalFileTime(time_t *fileTime, int *pYear, int *pDateTime)
 	tmTime.tm_year += 1900;
 	tmTime.tm_mon += 1;
 
-	_stprintf(szDate, "%02d%02d%02d%02d%02d", tmTime.tm_mon, tmTime.tm_mday, tmTime.tm_hour, tmTime.tm_min, tmTime.tm_sec);
+	_stprintf(szDate, "%d%02d%02d%02d%02d", tmTime.tm_mon, tmTime.tm_mday, tmTime.tm_hour, tmTime.tm_min, tmTime.tm_sec);
 	*pDateTime = atoi(szDate);
 	_stprintf(szDate, "%04d", tmTime.tm_year);
 	*pYear = atoi(szDate);
 
 	return true;
+}
+
+int CFileTime::setFileTime(STDTime *pDateTime)
+{
+	TCHAR szDate[16];
+	_stprintf(szDate, "%d%02d%02d%02d%02d", pDateTime->nMonth, pDateTime->nDay, pDateTime->nHour, pDateTime->nMinute, pDateTime->nSec);
+	m_nDateTime = atoi(szDate);
+	_stprintf(szDate, "%04d", pDateTime->nYear);
+	m_nYear = atoi(szDate);
+	return m_nDateTime;
 }
 
 int CFileTime::setFileTime(time_t *fileTime)
@@ -122,7 +132,7 @@ int CFileTime::setFileTime(time_t *fileTime)
 	tmTime.tm_mon += 1;
 
 	//printf("gm time and date : %s\n", asctime(gm_timeInfo));
-	_stprintf(szDate, "%02d%02d%02d%02d%02d", tmTime.tm_mon, tmTime.tm_mday, tmTime.tm_hour, tmTime.tm_min, tmTime.tm_sec);
+	_stprintf(szDate, "%d%02d%02d%02d%02d", tmTime.tm_mon, tmTime.tm_mday, tmTime.tm_hour, tmTime.tm_min, tmTime.tm_sec);
 	m_nDateTime = atoi(szDate);
 	_stprintf(szDate, "%04d", tmTime.tm_year);
 	m_nYear = atoi(szDate);
@@ -175,6 +185,17 @@ bool CFileTime::isCompare(unsigned int nCompare, E_OPERATOR eOP)
 	return false;
 }
 
+E_OPERATOR CFileTime::Compare(CFileTime *pCompare)
+{
+	if (pCompare->getYear() == m_nYear)
+	{
+		if(pCompare->getDateTime() == m_nDateTime) return eOperator_EQ;
+		if (pCompare->getDateTime() < m_nDateTime) return eOperator_GT;
+		else return eOperator_LT;
+	}
+	else if(pCompare->getYear() < m_nYear) return eOperator_GT;
+	else return eOperator_LT;
+}
 //##############################################################
 
 CDateTime::CDateTime(DT_TYPE nType, TZ_TYPE nTz)
@@ -498,3 +519,16 @@ void getCurrentTime(STDTime *pTime)
 #endif
 }
 
+int  getDaysPerMonth(int nMonth, int nYear)
+{
+	int nMonthDay[13] = { 0, 31, 28, 31, 30,31,30,31,31,30,31,30,31 };
+	if (0 < nMonth && nMonth < 13)
+	{
+		if (nMonth == 2) {
+			if (!(nYear % 4) && !(nYear % 100) && !(nYear % 400)) return 29;
+			else return 28;
+		}
+		else return nMonthDay[nMonth];
+	}
+	else return 0;
+}

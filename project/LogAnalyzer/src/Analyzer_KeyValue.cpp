@@ -198,11 +198,11 @@ void CAnalyzer_KeyValue::report(CLogger *pLogger)
 {
 	char *szBuf = gs_pMMgr->newBufByIndex(IDX_BUF_16k);
 
-	int i = 0, j, nPos=0, nDiff, fAvg;
+	int i = 0, j, nPos=0, nDiff;
 	STAnalyzer1_Line *pLine;
 	STAnalyzer1_UnitData *pUnitData;
 	unsigned int nAccumulate = 0;
-	float fRatio;
+	float fRatio, fAvg;
 
 	if (m_pLineList) {
 		calculate();
@@ -217,9 +217,10 @@ void CAnalyzer_KeyValue::report(CLogger *pLogger)
 			nPos += sprintf(szBuf + nPos, "Key[%s]	nTotCount[%d] Average[%f] Max[%d] min[%d] : \n", pLine->pKeyword, pLine->nTotalLine, pLine->fAvg, pLine->nMax, pLine->nMin);	
 			if (pLine->nTotCnt_expected) {
 				nDiff = pLine->nTotalLine - pLine->nTotCnt_expected;
-				fRatio = ((float)pLine->nTotalLine / (float)pLine->nTotCnt_expected) * 100.0f;
-				fAvg = 
-				nPos += sprintf(szBuf + nPos, "	correction: nExpectedCount[%d] Difference[%d] ratio[%f] \n", pLine->nTotCnt_expected, nDiff, fRatio);
+				fRatio = (float)pLine->nTotalLine / (float)pLine->nTotCnt_expected;
+				fAvg = pLine->fAvg * fRatio;
+				fRatio = fRatio * 100.0f;
+				nPos += sprintf(szBuf + nPos, "	correction: nExpectedCount[%d] Difference[%d] ratio[%f] Corrected average[%f]\n", pLine->nTotCnt_expected, nDiff, fRatio, fAvg);
 			}
 			j = 0;	
 			if (pLine->m_pUnitDataList) {

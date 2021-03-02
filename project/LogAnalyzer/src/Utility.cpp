@@ -63,71 +63,52 @@ void parsingTimeLog(char *pLog, STDTime *pTime, STDateTimeExp *pDTE)
 
 void setBeginningTime(STDTime *pTarget, STDTime *pNewTime)
 {
-	// TODO
-	// To be changed to shift operation
 
 	if (!pTarget->nHour) {
 		memcpy(pTarget, pNewTime, g_nTimeSize);
 		return;
 	}
+	E_OPERATOR eRes;
+	CFileTime targetDT, NewDT;
+	targetDT.setFileTime(pTarget);
+	NewDT.setFileTime(pNewTime);
 
-	if (pTarget->nDay == pNewTime->nDay) {
+	eRes = targetDT.Compare(&NewDT);
 
-		if (pTarget->nHour == pNewTime->nHour) {
-			if (pTarget->nMinute == pNewTime->nMinute) {
-				if (pTarget->nSec == pNewTime->nSec) {
-					if (pTarget->nLast > pNewTime->nLast) {
-						memcpy(pTarget, pNewTime, g_nTimeSize);
-					}
-				}
-				else if (pTarget->nSec > pNewTime->nSec) {
-					memcpy(pTarget, pNewTime, g_nTimeSize);
-				}
-			}
-			else if (pTarget->nMinute > pNewTime->nMinute) {
-				memcpy(pTarget, pNewTime, g_nTimeSize);
-			}
-		}
-		else if (pTarget->nHour > pNewTime->nHour) {
-			memcpy(pTarget, pNewTime, g_nTimeSize);
-		}
-	}
-	else if (pTarget->nDay > pNewTime->nDay) {
+	if (eRes == eOperator_LT) return;		
+		
+	if ( eRes == eOperator_GT) {
 		memcpy(pTarget, pNewTime, g_nTimeSize);
+	}
+	else if (eRes == eOperator_EQ) {
+		if (pNewTime->nLast < pTarget->nLast ) {
+			pTarget->nLast = pNewTime->nLast;
+		}
 	}
 }
 
 void setEndingTime(STDTime *pTarget, STDTime *pNewTime)
 {
-	// TODO
-	// To be changed to shift operation
 	if (!pTarget->nHour) {
 		memcpy(pTarget, pNewTime, g_nTimeSize);
 		return;
 	}
+	E_OPERATOR eRes;
+	CFileTime targetDT, NewDT;
+	targetDT.setFileTime(pTarget);
+	NewDT.setFileTime(pNewTime);
 
-	if (pTarget->nDay == pNewTime->nDay) {
-		if (pTarget->nHour == pNewTime->nHour) {
-			if (pTarget->nMinute == pNewTime->nMinute) {
-				if (pTarget->nSec == pNewTime->nSec) {
-					if (pTarget->nLast < pNewTime->nLast) {
-						memcpy(pTarget, pNewTime, g_nTimeSize);
-					}
-				}
-				else if (pTarget->nSec < pNewTime->nSec) {
-					memcpy(pTarget, pNewTime, g_nTimeSize);
-				}
-			}
-			else if (pTarget->nMinute < pNewTime->nMinute) {
-				memcpy(pTarget, pNewTime, g_nTimeSize);
-			}
-		}
-		else if (pTarget->nHour < pNewTime->nHour) {
-			memcpy(pTarget, pNewTime, g_nTimeSize);
-		}
-	}
-	else if (pTarget->nDay < pNewTime->nDay) {
+	eRes = targetDT.Compare(&NewDT);
+
+	if (eRes == eOperator_GT) return;
+
+	if (eRes == eOperator_LT) {
 		memcpy(pTarget, pNewTime, g_nTimeSize);
+	}
+	else if (eRes == eOperator_EQ) {
+		if (pTarget->nLast < pNewTime->nLast) {
+			pTarget->nLast = pNewTime->nLast;
+		}
 	}
 }
 
@@ -172,8 +153,25 @@ void getTimeInterval(STDTime *pTime1, STDTime *pTime2, STDTime *pTimeTarget)
 	else {
 		pTimeTarget->nHour = pTime2->nHour - pTime1->nHour;
 	}	
-	pTimeTarget->nDay = pTime2->nDay - pTime1->nDay;
+
+	if (pTime2->nDay < pTime1->nDay) {
+		pTimeTarget->nDay = (pTime2->nDay + getDaysPerMonth(pTime1->nMonth,pTime1->nYear)) - pTime1->nDay;
+		pTime2->nMonth -= 1;
+	}
+	else {
+		pTimeTarget->nDay = pTime2->nDay - pTime1->nDay;
+	}
+
+	if (pTime2->nMonth < pTime1->nMonth) {
+		pTimeTarget->nMonth = (pTime2->nDay + 12) - pTime1->nMonth;
+		pTime2->nYear -= 1;
+	}
+	else pTimeTarget->nMonth = pTime2->nMonth - pTime1->nMonth;
+	
+	pTimeTarget->nYear = pTime2->nYear - pTime1->nYear;
+		
 }
+
 
 int getInterval(char *pSorceString, char *pKey)
 {

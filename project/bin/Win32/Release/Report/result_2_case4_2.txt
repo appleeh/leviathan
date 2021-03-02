@@ -1,0 +1,138 @@
+
+################################################# 
+[2021/03/02 16:10:28.487] [INFO]    Source file information for analysis :  
+################################################# 
+[2021/03/02 16:10:28.586] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210226_Library_Default_1.log, fileSize[5110393] nLineCount[69418] 
+[2021/03/02 16:10:28.674] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210226_Library_Default_2.log, fileSize[5044015] nLineCount[69355] 
+[2021/03/02 16:10:28.747] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210226_Library_Default_3.log, fileSize[5022203] nLineCount[68247] 
+[2021/03/02 16:10:28.810] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210226_Library_Default.log, fileSize[4260579] nLineCount[56332] 
+[2021/03/02 16:10:28.883] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_1.log, fileSize[5030575] nLineCount[67181] 
+[2021/03/02 16:10:28.955] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_2.log, fileSize[5052578] nLineCount[67297] 
+[2021/03/02 16:10:29.029] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_3.log, fileSize[5119499] nLineCount[67751] 
+[2021/03/02 16:10:29.102] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_4.log, fileSize[5031518] nLineCount[67189] 
+[2021/03/02 16:10:29.179] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_5.log, fileSize[5056853] nLineCount[67326] 
+[2021/03/02 16:10:29.261] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_6.log, fileSize[5086812] nLineCount[67555] 
+[2021/03/02 16:10:29.349] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_7.log, fileSize[5069079] nLineCount[69300] 
+[2021/03/02 16:10:29.428] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_8.log, fileSize[5116090] nLineCount[68664] 
+[2021/03/02 16:10:29.513] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_9.log, fileSize[5090160] nLineCount[67591] 
+[2021/03/02 16:10:29.588] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_10.log, fileSize[5031555] nLineCount[67214] 
+[2021/03/02 16:10:29.662] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_11.log, fileSize[5098941] nLineCount[67674] 
+[2021/03/02 16:10:29.753] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_12.log, fileSize[5074399] nLineCount[67464] 
+[2021/03/02 16:10:29.828] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_13.log, fileSize[5027192] nLineCount[67132] 
+[2021/03/02 16:10:29.915] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_14.log, fileSize[5107376] nLineCount[67654] 
+[2021/03/02 16:10:29.992] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_15.log, fileSize[5069165] nLineCount[68388] 
+[2021/03/02 16:10:30.067] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_16.log, fileSize[5063879] nLineCount[69234] 
+[2021/03/02 16:10:30.139] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_17.log, fileSize[5109466] nLineCount[67740] 
+[2021/03/02 16:10:30.220] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_18.log, fileSize[5002841] nLineCount[67027] 
+[2021/03/02 16:10:30.307] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_19.log, fileSize[5102266] nLineCount[68554] 
+[2021/03/02 16:10:30.386] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_20.log, fileSize[5085404] nLineCount[67588] 
+[2021/03/02 16:10:30.560] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_21.log, fileSize[5116826] nLineCount[68627] 
+[2021/03/02 16:10:30.732] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_22.log, fileSize[5095004] nLineCount[68439] 
+[2021/03/02 16:10:30.855] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_23.log, fileSize[5109654] nLineCount[68647] 
+[2021/03/02 16:10:30.941] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_24.log, fileSize[5062297] nLineCount[69208] 
+[2021/03/02 16:10:31.023] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_25.log, fileSize[5043192] nLineCount[68121] 
+[2021/03/02 16:10:31.095] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_26.log, fileSize[5076292] nLineCount[67441] 
+[2021/03/02 16:10:31.172] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_27.log, fileSize[5106872] nLineCount[68515] 
+[2021/03/02 16:10:31.247] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_28.log, fileSize[5107332] nLineCount[68536] 
+[2021/03/02 16:10:31.321] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_29.log, fileSize[5082914] nLineCount[67555] 
+[2021/03/02 16:10:31.393] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_30.log, fileSize[5005061] nLineCount[66885] 
+[2021/03/02 16:10:31.467] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_31.log, fileSize[5023362] nLineCount[67884] 
+[2021/03/02 16:10:31.540] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_32.log, fileSize[5000860] nLineCount[67813] 
+[2021/03/02 16:10:31.615] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_33.log, fileSize[5112634] nLineCount[68306] 
+[2021/03/02 16:10:31.685] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default_34.log, fileSize[5032494] nLineCount[66962] 
+[2021/03/02 16:10:31.785] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210227_Library_Default.log, fileSize[3490077] nLineCount[46060] 
+[2021/03/02 16:10:31.869] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_1.log, fileSize[5014421] nLineCount[66894] 
+[2021/03/02 16:10:31.942] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_2.log, fileSize[5008586] nLineCount[66752] 
+[2021/03/02 16:10:32.023] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_3.log, fileSize[5091606] nLineCount[67317] 
+[2021/03/02 16:10:32.121] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_4.log, fileSize[5026941] nLineCount[66986] 
+[2021/03/02 16:10:32.196] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_5.log, fileSize[5023708] nLineCount[67867] 
+[2021/03/02 16:10:32.288] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_6.log, fileSize[5002308] nLineCount[67780] 
+[2021/03/02 16:10:32.363] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_7.log, fileSize[5073818] nLineCount[68069] 
+[2021/03/02 16:10:32.435] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_8.log, fileSize[5030660] nLineCount[66946] 
+[2021/03/02 16:10:32.510] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_9.log, fileSize[5079802] nLineCount[67328] 
+[2021/03/02 16:10:32.584] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_10.log, fileSize[5002954] nLineCount[66733] 
+[2021/03/02 16:10:32.660] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_11.log, fileSize[5043248] nLineCount[67058] 
+[2021/03/02 16:10:32.739] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_12.log, fileSize[5058945] nLineCount[67147] 
+[2021/03/02 16:10:32.813] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_13.log, fileSize[5117895] nLineCount[69301] 
+[2021/03/02 16:10:32.971] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_14.log, fileSize[5004721] nLineCount[67841] 
+[2021/03/02 16:10:33.099] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_15.log, fileSize[5093670] nLineCount[68234] 
+[2021/03/02 16:10:33.262] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_16.log, fileSize[5003178] nLineCount[66811] 
+[2021/03/02 16:10:33.350] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_17.log, fileSize[5096183] nLineCount[67420] 
+[2021/03/02 16:10:33.421] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_18.log, fileSize[5014146] nLineCount[66935] 
+[2021/03/02 16:10:33.497] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_19.log, fileSize[5121595] nLineCount[68410] 
+[2021/03/02 16:10:33.571] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_20.log, fileSize[5090310] nLineCount[67373] 
+[2021/03/02 16:10:33.643] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_21.log, fileSize[5011352] nLineCount[67781] 
+[2021/03/02 16:10:33.715] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_22.log, fileSize[5089529] nLineCount[69140] 
+[2021/03/02 16:10:33.787] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_23.log, fileSize[5046874] nLineCount[67115] 
+[2021/03/02 16:10:33.862] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_24.log, fileSize[5119165] nLineCount[68358] 
+[2021/03/02 16:10:33.935] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_25.log, fileSize[5116871] nLineCount[68329] 
+[2021/03/02 16:10:34.007] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_26.log, fileSize[5079890] nLineCount[67304] 
+[2021/03/02 16:10:34.081] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_27.log, fileSize[5109584] nLineCount[68296] 
+[2021/03/02 16:10:34.150] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_28.log, fileSize[5012352] nLineCount[66887] 
+[2021/03/02 16:10:34.227] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_29.log, fileSize[5054064] nLineCount[67120] 
+[2021/03/02 16:10:34.339] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_30.log, fileSize[5094623] nLineCount[69214] 
+[2021/03/02 16:10:34.411] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_31.log, fileSize[5042350] nLineCount[68439] 
+[2021/03/02 16:10:34.481] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_32.log, fileSize[5027902] nLineCount[65102] 
+[2021/03/02 16:10:34.553] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default_33.log, fileSize[5036032] nLineCount[65793] 
+[2021/03/02 16:10:34.621] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210228_Library_Default.log, fileSize[4740771] nLineCount[61348] 
+[2021/03/02 16:10:34.692] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210301_Library_Default_1.log, fileSize[5037821] nLineCount[65772] 
+[2021/03/02 16:10:34.773] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210301_Library_Default_2.log, fileSize[5067651] nLineCount[66005] 
+[2021/03/02 16:10:34.777] [INFO]  parsing complete!  E:\InfiniA-Library-3.0\bin\Win32\Release\2.0\InfiniALog\20210301_Library_Default.log, fileSize[260474] nLineCount[3358] 
+
+### REPORT ### 
+
+  Analyzer run time : [0]hours [0]minutes [6]seconds [325]milliseconds
+  Duration of log accumulation : [2] days [4]hours [28]minutes [54]seconds [437]milliseconds
+
+
+################################################# 
+  KeyValue Report : 
+################################################# 
+Key[Parameter proc]	nTotCount[1728000] Average[7.649265] Max[94] min[0] : 
+	correction: nExpectedCount[1728000] Difference[0] ratio[100.000000] Corrected average[7.649265]
+		KeyValue[procTotTime] report : nValue[0] nTotCount[971968] percent[56.248146]
+		KeyValue[procTotTime] report : nValue[32] nTotCount[22525] percent[1.303530]
+		KeyValue[procTotTime] report : nValue[16] nTotCount[416553] percent[24.106077]
+		KeyValue[procTotTime] report : nValue[15] nTotCount[249726] percent[14.451736]
+		KeyValue[procTotTime] report : nValue[63] nTotCount[4] percent[0.000231]
+		KeyValue[procTotTime] report : nValue[31] nTotCount[67105] percent[3.883391]
+		KeyValue[procTotTime] report : nValue[94] nTotCount[1] percent[0.000058]
+		KeyValue[procTotTime] report : nValue[47] nTotCount[91] percent[0.005266]
+		KeyValue[procTotTime] report : nValue[62] nTotCount[9] percent[0.000521]
+		KeyValue[procTotTime] report : nValue[46] nTotCount[14] percent[0.000810]
+		KeyValue[procTotTime] report : nValue[78] nTotCount[4] percent[0.000231]
+
+Key[Event proc]	nTotCount[518405] Average[0.390872] Max[32] min[0] : 
+	correction: nExpectedCount[518400] Difference[5] ratio[100.000969] Corrected average[0.390876]
+		KeyValue[procTotTime] report : nValue[0] nTotCount[505441] percent[97.499252]
+		KeyValue[procTotTime] report : nValue[16] nTotCount[8089] percent[1.560363]
+		KeyValue[procTotTime] report : nValue[15] nTotCount[4870] percent[0.939420]
+		KeyValue[procTotTime] report : nValue[32] nTotCount[1] percent[0.000193]
+		KeyValue[procTotTime] report : nValue[31] nTotCount[4] percent[0.000772]
+
+Key[threadSend]	nTotCount[42543] Average[15.621888] Max[16] min[0] : 
+	correction: nExpectedCount[2246400] Difference[-2203857] ratio[1.893830] Corrected average[0.295852]
+		KeyValue[procTime] report : nValue[16] nTotCount[26457] percent[62.188847]
+		KeyValue[procTime] report : nValue[15] nTotCount[16086] percent[37.811157]
+
+Key[CComunicator::Send]	nTotCount[500875] Average[15.639077] Max[94] min[0] : 
+	correction: nExpectedCount[2246400] Difference[-1745525] ratio[22.296787] Corrected average[3.487012]
+		KeyValue[procTime] report : nValue[16] nTotCount[312971] percent[62.484856]
+		KeyValue[procTime] report : nValue[15] nTotCount[187503] percent[37.435089]
+		KeyValue[procTime] report : nValue[47] nTotCount[28] percent[0.005590]
+		KeyValue[procTime] report : nValue[32] nTotCount[107] percent[0.021363]
+		KeyValue[procTime] report : nValue[94] nTotCount[1] percent[0.000200]
+		KeyValue[procTime] report : nValue[31] nTotCount[261] percent[0.052109]
+		KeyValue[procTime] report : nValue[46] nTotCount[2] percent[0.000399]
+		KeyValue[procTime] report : nValue[63] nTotCount[1] percent[0.000200]
+		KeyValue[procTime] report : nValue[62] nTotCount[1] percent[0.000200]
+
+
+
+################################################# 
+  ExtractNToFile Report : 
+################################################# 
+
+[0] Extract Report : keyword[ERROR] nTotCount[2]
+[1] Extract Report : keyword[WSA_IO_PENDING] nTotCount[2]
+[2] Extract Report : keyword[SendComplete] nTotCount[2246401]

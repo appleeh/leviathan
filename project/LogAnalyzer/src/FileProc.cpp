@@ -64,8 +64,7 @@ void CFileProc::FileProc()
 		nLineSize = CFileUtil::getNextLine(&m_szLine);
 	}
 	setEndingTime(&g_stConfig.stEndTime, &g_stConfig.stCurTime);
-	g_stConfig.pReport->LogPrint(LEVEL_INFO, "parsing complete!  %s, nLineCount[%d]", m_pFilePathName, nLineCount);
-	g_stConfig.pReport->LogPrint(LEVEL_INFO, "%s", pNextLine);
+	g_stConfig.pReport->LogPrint(LEVEL_INFO, "parsing complete!  %s, fileSize[%u] nLineCount[%d]", m_pFilePathName, m_nFileSize, nLineCount);
 }
 
 

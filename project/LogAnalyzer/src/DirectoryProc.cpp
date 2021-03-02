@@ -97,6 +97,13 @@ bool CDirectoryProc::verificationNSetFileProc()
 	return true;
 }
 
+void StartReportTitle()
+{
+	g_stConfig.pReport->LogPrint("\n################################################# \n");
+	g_stConfig.pReport->LogPrint(LEVEL_INFO, "  Source file information for analysis : ");
+	g_stConfig.pReport->LogPrint("################################################# \n");
+}
+
 bool CDirectoryProc::proc(char *pDir)
 {
 	int i, nCount;
@@ -112,6 +119,10 @@ bool CDirectoryProc::proc(char *pDir)
 
 	if (!verificationNSetFileProc()) return false;
 
+
+	StartReportTitle();
+
+
 	for (i = 0; i < nCount; i++)
 	{
 		pFileInfo = (STFileInfoEx *)pSortData[i].p;
@@ -120,10 +131,10 @@ bool CDirectoryProc::proc(char *pDir)
 			sprintf(szFileName, "%s%s", pDir, pFileInfo->fname);
 			if (cFileProc.init(szFileName, pFileInfo->nSize)) {
 				(cFileProc.*m_fpFileProc)();
-				gs_cLogger.PutLogQueue(LEVEL_TRACE, _T("FILEProcComplete fileSize[%d]"), cFileProc.getFileSize());
 			}
 		}
 	}
+	g_stConfig.pReport->LogPrint("\n");
 	int nSize = sizeof(STSortData) * nCount;
 	gs_pMMgr->delBuf((char*)pSortData, nSize);
 	pSortData = NULL;

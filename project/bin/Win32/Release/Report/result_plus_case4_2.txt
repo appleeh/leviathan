@@ -1,0 +1,66 @@
+[2021/03/02 15:16:34.652] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210226_Library_Default.log, nLineCount[457980] 
+[2021/03/02 15:16:35.260] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210227_Library_Default_1.log, nLineCount[499187] 
+[2021/03/02 15:16:35.803] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210227_Library_Default_2.log, nLineCount[499712] 
+[2021/03/02 15:16:36.337] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210227_Library_Default_3.log, nLineCount[499778] 
+[2021/03/02 15:16:36.970] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210227_Library_Default_4.log, nLineCount[499285] 
+[2021/03/02 15:16:37.348] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210227_Library_Default.log, nLineCount[296807] 
+[2021/03/02 15:16:37.945] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210228_Library_Default_1.log, nLineCount[497315] 
+[2021/03/02 15:16:38.640] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210228_Library_Default_2.log, nLineCount[497755] 
+[2021/03/02 15:16:39.186] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210228_Library_Default_3.log, nLineCount[497605] 
+[2021/03/02 15:16:39.839] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210228_Library_Default_4.log, nLineCount[495029] 
+[2021/03/02 15:16:40.141] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210228_Library_Default.log, nLineCount[265068] 
+[2021/03/02 15:16:40.688] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210301_Library_Default_1.log, nLineCount[488982] 
+[2021/03/02 15:16:40.811] [INFO]  parsing complete!  D:\LOG_BACKUP\plus\InfiniALog_4000+200+3Days\20210301_Library_Default.log, nLineCount[110610] 
+### REPORT ### 
+
+  Analyzer run time : [0]hours [0]minutes [6]seconds [687]milliseconds
+  Duration of log accumulation : [2] days [11]hours [54]minutes [1]seconds [93]milliseconds
+
+
+################################################# 
+  KeyValue Report : 
+################################################# 
+Key[Parameter proc]	nTotCount[1728000] Average[15.386273] Max[63] min[0] : 
+	correction: nExpectedCount[1728000] Difference[0] ratio[100.000000] fAvg[15.386273]
+		KeyValue[procTotTime] report : nValue[16] nTotCount[1044888] percent[60.468056]
+		KeyValue[procTotTime] report : nValue[0] nTotCount[25216] percent[1.459259]
+		KeyValue[procTotTime] report : nValue[15] nTotCount[657849] percent[38.069965]
+		KeyValue[procTotTime] report : nValue[31] nTotCount[29] percent[0.001678]
+		KeyValue[procTotTime] report : nValue[47] nTotCount[2] percent[0.000116]
+		KeyValue[procTotTime] report : nValue[32] nTotCount[15] percent[0.000868]
+		KeyValue[procTotTime] report : nValue[63] nTotCount[1] percent[0.000058]
+
+Key[Event proc]	nTotCount[518400] Average[0.000000] Max[0] min[0] : 
+	correction: nExpectedCount[518400] Difference[0] ratio[100.000000] fAvg[0.000000]
+		KeyValue[procTotTime] report : nValue[0] nTotCount[518400] percent[100.000000]
+
+Key[redisSend]	nTotCount[1648958] Average[15.659138] Max[328] min[0] : 
+	correction: nExpectedCount[2246400] Difference[-597442] ratio[73.404465] fAvg[11.494507]
+		KeyValue[procTime] report : nValue[16] nTotCount[1021746] percent[61.963127]
+		KeyValue[procTime] report : nValue[15] nTotCount[624018] percent[37.843170]
+		KeyValue[procTime] report : nValue[31] nTotCount[1910] percent[0.115831]
+		KeyValue[procTime] report : nValue[32] nTotCount[702] percent[0.042572]
+		KeyValue[procTime] report : nValue[47] nTotCount[324] percent[0.019649]
+		KeyValue[procTime] report : nValue[63] nTotCount[109] percent[0.006610]
+		KeyValue[procTime] report : nValue[62] nTotCount[100] percent[0.006064]
+		KeyValue[procTime] report : nValue[46] nTotCount[46] percent[0.002790]
+		KeyValue[procTime] report : nValue[328] nTotCount[2] percent[0.000121]
+		KeyValue[procTime] report : nValue[312] nTotCount[1] percent[0.000061]
+
+Key[CComunicator::Send]	nTotCount[1702728] Average[15.613871] Max[47] min[0] : 
+	correction: nExpectedCount[2246400] Difference[-543672] ratio[75.798073] fAvg[11.835013]
+		KeyValue[procTime] report : nValue[16] nTotCount[1044864] percent[61.364113]
+		KeyValue[procTime] report : nValue[15] nTotCount[657841] percent[38.634533]
+		KeyValue[procTime] report : nValue[31] nTotCount[16] percent[0.000940]
+		KeyValue[procTime] report : nValue[47] nTotCount[1] percent[0.000059]
+		KeyValue[procTime] report : nValue[32] nTotCount[6] percent[0.000352]
+
+
+
+################################################# 
+  ExtractNToFile Report : 
+################################################# 
+
+[0] Extract Report : keyword[ERROR] nTotCount[1]
+[1] Extract Report : keyword[WSA_IO_PENDING] nTotCount[0]
+[2] Extract Report : keyword[SendComplete] nTotCount[0]
