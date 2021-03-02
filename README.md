@@ -5,7 +5,8 @@ C++ Big Data Solution
 common : a collection of library of data structures with improved speed
 
          -  Very fast memory POOL, 
-         -  Synchronization-based data struture collection : spinLock & atomic & Critical Section(mutex) & SWLock 
+         -  Synchronization-based data struture collection 
+                  spinLock & atomic & Critical Section(mutex) & SWLock 
          -  Large file handling library
          -  quick sort
          -  hash map, double hash map
