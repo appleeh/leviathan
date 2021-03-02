@@ -22,7 +22,7 @@ common : a collection of library of data structures with improved speed
 
 network : Framework for building servers very quickly
 
-        verification competed : iocp/redis
+        verification completed : iocp/redis
         todo : 
         
           - Provides a more organized interface
