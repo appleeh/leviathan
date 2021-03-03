@@ -12,13 +12,8 @@ network : Framework for building servers very quickly
 
 
 
-<<<<<<< Updated upstream
-![network-1](.\img\network-1.PNG)
 
-
-=======
 ![](https://github.com/appleeh/leviathan/blob/master/project/network/img/network-1.PNG)
->>>>>>> Stashed changes
 
 
 
@@ -66,7 +61,7 @@ network : Framework for building servers very quickly
 
 
 
-![network-2](.\img\network-2.PNG)
+![](https://github.com/appleeh/leviathan/blob/master/project/network/img/network-2.PNG)
 
 #### 소켓 버퍼 전략
 
@@ -101,7 +96,7 @@ network : Framework for building servers very quickly
 
 
 
-![network-4](.\img\network-4.PNG)
+![](https://github.com/appleeh/leviathan/blob/master/project/network/img/network-4.PNG)
 
 
 
@@ -135,7 +130,7 @@ network : Framework for building servers very quickly
 
 
 
-![network-3](.\img\network-3.PNG)
+![](https://github.com/appleeh/leviathan/blob/master/project/network/img/network-3.PNG)
 
 
 
