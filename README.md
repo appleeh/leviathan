@@ -17,7 +17,10 @@ common : a collection of library of data structures with improved speed
          -  Date time processing library
          -  multi OS support Library (70% application rate)
          -  a collection of OS-dependent system libraries
-         -  
+         -  core : thread Pool, event thread pool, scheduler thread pool, 
+                   Log writer thread pool
+         - Logger system with enhanced functions and performance
+
 
 
 network : Framework for building servers very quickly
@@ -28,7 +31,9 @@ network : Framework for building servers very quickly
           - Provides a more organized interface
           - provide epoll-based framework
           - provide buffer according to http contents size analysis
-          - 
+          
+
+
 
 LogAnalyzer : Large File Analyzer To verify server and engine performance, accuracy, and integrity
 
