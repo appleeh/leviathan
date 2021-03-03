@@ -12,7 +12,7 @@ network : Framework for building servers very quickly
 
 
 
-![](E:\project\leviathan\project\network\img\network-1.PNG)
+![network-1](.\img\network-1.PNG)
 
 
 
@@ -62,7 +62,7 @@ network : Framework for building servers very quickly
 
 
 
-![network-2](E:\project\leviathan\project\network\img\network-2.PNG)
+![network-2](.\img\network-2.PNG)
 
 #### 소켓 버퍼 전략
 
@@ -97,7 +97,7 @@ network : Framework for building servers very quickly
 
 
 
-![network-4](E:\project\leviathan\project\network\img\network-4.PNG)
+![network-4](.\img\network-4.PNG)
 
 
 
@@ -131,7 +131,7 @@ network : Framework for building servers very quickly
 
 
 
-![network-3](E:\project\leviathan\project\network\img\network-3.PNG)
+![network-3](.\img\network-3.PNG)
 
 
 
