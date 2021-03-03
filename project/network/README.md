@@ -111,7 +111,7 @@ network : Framework for building servers very quickly
 
 
 
-###### 장점
+#### 장점
 
 1. 하나의 소켓은 하나의 지정된 쓰레드에서 처리된다.
 2. 다중 소켓 처리를 특정 쓰레드 풀에서만 처리하여
@@ -119,7 +119,7 @@ network : Framework for building servers very quickly
 
 
 
-###### 처리 매커니즘
+#### 처리 매커니즘
 
 1. IOCP 와 전반적으로 구조는 동일.
 2. 단 소켓 생성시 특정 epoll 을 할당
