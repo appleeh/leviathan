@@ -91,7 +91,6 @@ network : Framework for building servers very quickly
 #### 다중 IOCP 구조 활용
 
 1. IOCP 큐 하나를 소켓 처리가 아닌 순수 이벤트 처리 쓰레드로 활용 가능하다. 
-   이때는 SessionManager 를 사용안함으로 지정해야 한다.
 2. IOCP 큐를 작업별로 분할하여 역할을 쪼갤수 있다.
 
 
