@@ -110,47 +110,63 @@ bool CQueueS::push(void* pData) // multi thread (Lock required)
 	}
 
 	SPIN_LOCK_ENTER(&m_cLockPush);
-	//if (m_pArray[m_nLast]) {
-	//	//nTmp = m_nLast; nTmp2 = m_nMax;
-	//	printf("[%p] Already data Set! m_nLast[%d] nMax[%d]\n", m_pArray, m_nLast, m_nMax);
-	//}
 	m_pArray[m_nLast] = pData;
 	m_nLast++;
 	if (m_nLast == m_nMax) m_nLast = 0;
-	//printf("[%p] m_nLast[%d] nMax[%d]\n", m_pArray, nTmp, m_nMax);
 	SPIN_LOCK_LEAVE(&m_cLockPush);
-	//if (0 <= nTmp) {
-	//	gs_cLogger.DebugLog(LEVEL_ERROR, "Already data Set! m_nLast[%d] nMax[%d]", nTmp, nTmp2);
-	//}
 	return true;
 }
 
-void* CQueueS::pop() // multi thread (Lock required)
+//void* CQueueS::pop() // single thread (Lock required for realloc)
+//{
+//	void* res;
+//	SPIN_LOCK_ENTER(&m_cLockPop);
+//	res = m_pArray[m_nFront];
+//	if (res) {
+//		m_pArray[m_nFront] = 0;
+//		m_nFront++;
+//		if (m_nOldMax) {
+//			if(m_nFront == m_nOldMax) m_nFront = 0;
+//		}
+//		else if (m_nFront == m_nMax) m_nFront = 0;
+//	}
+//	else if (m_nOldMax) {
+//		res = m_pArray[m_nOldMax]; 
+//		m_pArray[m_nOldMax] = 0;
+//		m_nFront = m_nOldMax+1;
+//		m_nOldMax = 0;
+//	}
+//
+//	SPIN_LOCK_LEAVE(&m_cLockPop);
+//	return res;
+//}
+
+
+void* CQueueS::pop() // single thread (Lock required for realloc)
 {
 	void* res;
 	SPIN_LOCK_ENTER(&m_cLockPop);
 	res = m_pArray[m_nFront];
 	if (res) {
 		m_pArray[m_nFront] = 0;
-		//printf("[%p] m_nFront[%d] nMax[%d]\n", m_pArray, m_nFront, nMax);
 		m_nFront++;
-		if (m_nOldMax) {
-			if(m_nFront == m_nOldMax) m_nFront = 0;
-		}
-		else if (m_nFront == m_nMax) m_nFront = 0;
+		if (m_nFront == m_nMax) m_nFront = 0;
+		SPIN_LOCK_LEAVE(&m_cLockPop);
+		return res;
 	}
 	else if (m_nOldMax) {
-		//nTmp = m_nFront; nTmp2 = m_nOldMax;
-		res = m_pArray[m_nOldMax]; 
-		m_pArray[m_nOldMax] = 0;
-		//printf("[%p] m_nFront[%d] m_nOldMax[%d]\n", m_pArray, m_nFront, m_nOldMax);
-		m_nFront = m_nOldMax+1;
-		m_nOldMax = 0;
+		if (m_pArray[0]) {
+			res = m_pArray[0];
+			m_pArray[0] = 0;
+			m_nFront = 1;
+		}
+		else {
+			res = m_pArray[m_nOldMax];
+			m_pArray[m_nOldMax] = 0;
+			m_nFront = m_nOldMax + 1;
+			m_nOldMax = 0;
+		}
 	}
 	SPIN_LOCK_LEAVE(&m_cLockPop);
-	//if (0 <= nTmp) {
-	//	gs_cLogger.DebugLog(LEVEL_INFO, "m_nFront[%d] m_nOldMax[%d]", nTmp, nTmp2);
-	//}
 	return res;
 }
-

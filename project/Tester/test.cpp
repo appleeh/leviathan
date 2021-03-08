@@ -61,7 +61,7 @@ bool test_setParameter(DpParameter *dpParameter, int nParameterCount, int nStart
 	return true;
 }
 
-atomic_nr g_nSeq;
+atomic_nr g_nTraceSeq, g_nEventSeq;
 //##########################################
 // Thread logic processing function that sends parameters
 //##########################################
@@ -94,7 +94,7 @@ void parameterThreadProc(STThreadInfo *ptr)
 		// runtime over check
 		if (g_IsLogProcTime) {
 			nTotTime = CURRENT_TIME - nTotTime;
-			EqSLog(LOG_INFO, _T("[%d] Parameter proc time procTotTime[%d]milliseconds"), g_nSeq.atomic_increment(), nTotTime);
+			EqSLog(LOG_INFO, _T("g_nTraceSeq[%d] Parameter proc time procTotTime[%d]milliseconds"), g_nTraceSeq.atomic_increment(), nTotTime);
 		}
 	}
 	//##########################################################################
@@ -126,8 +126,7 @@ void eventProc(STEventData *pEvent)
 
 	if (g_IsLogProcTime) {
 		nTotTime = CURRENT_TIME - nTotTime;
-		EqSLog(LOG_INFO, _T("[%d] Event proc time procTotTime[%d]milliseconds"), g_nSeq.atomic_increment(), nTotTime);
-
+		EqSLog(LOG_INFO, _T("g_nEventSeq[%d] Event proc time procTotTime[%d]milliseconds"), g_nEventSeq.atomic_increment(), nTotTime);
 	}
 }
 

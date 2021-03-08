@@ -71,7 +71,6 @@ private :
 	CMemList<CNWSocket> * m_pConnectList;	// °¡º¯
 
     void    regularCloseSocketComplete(CNWSocket *lpCompletion);
-	int	    shutdownPutQueue(CNWSocket *lpCompletion);
 	void	procAtonceClose(CNWSocket *lpCompletion, StDisconInfo sInfo);
 	void	setDisconnectInfo(StDisconInfo *pInfo, CNWSocket *pSocket);
 

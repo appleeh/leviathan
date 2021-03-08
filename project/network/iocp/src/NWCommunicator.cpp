@@ -144,7 +144,7 @@ void CNWCommunicator::comproc_recvComplete(STComplete *pComplete)
 	{
 		lpOverlappedEx->stCommon.opCode = OP_ERROR;
 		gs_cLogger.PutLogQueue(LEVEL_ERROR, "OP_RECVCOPLETE WSAGetLastError[%d] bSuccess[%d] nBytesTrans[%d]", WSAGetLastError(), pComplete->bSuccess, pComplete->bytesTrans);
-		shutdownPutQueue(lpOverlappedEx->lpClient);
+		lpOverlappedEx->lpClient->socketShutdown();
 		return;
 	}
 
@@ -167,11 +167,11 @@ void CNWCommunicator::comproc_sendComplete(STComplete *pComplete)
 	{
 		if(pSocket->Connected())
 		{
-			pSocket->SETSOCKETSTATUS(SOCK_STATUS_CLOSE_ERROR);
 			gs_cLogger.DebugLog(LEVEL_ERROR, "nSIdx[%d] nFD[%u] WSAGetLastError[%d] bSuccess[%d] nBytesTrans[%d]", 
 				pSocket->GETSESSIONIDX(), (UINT)pSocket->GETSOCKET(),
 				WSAGetLastError(), pComplete->bSuccess, pComplete->bytesTrans); 
-			shutdownPutQueue(pSocket);
+			pSocket->socketShutdown();
+			return;
 		}
 	}
 	else if(lpOverlappedEx->pObj) {
@@ -184,6 +184,9 @@ void CNWCommunicator::comproc_sendComplete(STComplete *pComplete)
 
 	// CNWSocket::LPSOCKETDATA return
 	gs_pMMgr->delBuf(lpOverlappedEx->pData, lpOverlappedEx->nTotLen+1);
+	lpOverlappedEx->pData = NULL;
+	lpOverlappedEx->nTotLen = 0;
+	pSocket->INITSENDDATA();
 	g_pSessMgr->returnSockData(lpOverlappedEx);
 }
 
@@ -199,17 +202,8 @@ void CNWCommunicator::comproc_close(STComplete *pComplete)
 {
 	STOVERLAPPED *lpOverlapped = (STOVERLAPPED *)pComplete->lpOverlapped;
 	CNWSocket * pSocket = (CNWSocket *)pComplete->lpCompletion;
+	gs_cLogger.PutLogQueue(LEVEL_TRACE, "comproc_close");
 
-	CNWSocket::LPSOCKETDATA lpSendData = pSocket->GETSENDDATA();
-	if (lpSendData) {
-		if (lpSendData->pData) {
-			gs_pMMgr->delBuf(lpSendData->pData, lpSendData->nTotLen+1);
-			lpSendData->pData = NULL;
-			lpSendData->nTotLen = 0;
-		}
-		pSocket->INITSENDDATA();
-		g_pSessMgr->returnSockData(lpSendData);
-	}
 	regularCloseSocketComplete(pSocket);
 	m_pIOCPHandler->deleteEvent(lpOverlapped);
 	
@@ -221,20 +215,13 @@ int	CNWCommunicator::getClientCount() { return m_pConnectList->size(); }
 
 
 
-int	CNWCommunicator::shutdownPutQueue(CNWSocket *lpCompletion)
-{
-	if (lpCompletion->socketShutdown()) {
-		return m_pIOCPHandler->putRTSQueue(OP_CLOSE, lpCompletion);
-	}
-	return CERROR_NONE;
-}
-
 void CNWCommunicator::regularCloseSocketComplete(CNWSocket *lpCompletion)
 {
 	StDisconInfo sInfo;
 	sInfo.nFlag = DISCONNECT_NORMAL;
 	setDisconnectInfo(&sInfo, lpCompletion);
 	if(m_pDisconnectFunction) m_pDisconnectFunction(sInfo);
+	gs_cLogger.PutLogQueue(LEVEL_TRACE, "regularCloseSocketComplete");
 	procAtonceClose(lpCompletion, sInfo);
 }
 
@@ -257,6 +244,7 @@ void CNWCommunicator::procAtonceClose(CNWSocket *lpCompletion, StDisconInfo sInf
 	if (m_pDisconnectFunction) m_pDisconnectFunction(sInfo);
 
 	lpCompletion->closeSocket();
+	gs_cLogger.PutLogQueue(LEVEL_TRACE, "procAtonceClose");
 
 	// 마지막 : 메모리 반환 (고정 소켓들은 메모리 반환을 하지 않는다.)
 	if (lpCompletion->ISSOCKETSTATUS(SOCK_STATUS_ACCEPTED)) g_pSessMgr->delSocket(lpCompletion);
@@ -379,7 +367,8 @@ void CNWCommunicator::Close(int nSIdx)
 	CNWSocket *pSocket = g_pSessMgr->getUsedSession(nSIdx);
 	if (pSocket) {
 		pSocket->SETSOCKETSTATUS(SOCK_STATUS_CLOSE_NORMAL);
-		shutdownPutQueue(pSocket);
+		gs_cLogger.PutLogQueue(LEVEL_INFO, "CNWCommunicator::Close");
+		pSocket->socketShutdown();
 	}
 	else {
 		gs_cLogger.DebugLog(LEVEL_ERROR, _T("nSIdx[%d] pSock is NULL"), nSIdx);
@@ -436,7 +425,7 @@ int CNWCommunicator::timeoutProcess()
 	while ((pSock = m_pConnectList->getNext(&nCurIdx)))	{
 		if (GETTICKCOUNT() - pSock->GETTIMETICK() > m_nTimeout)	{
 			pSock->SETSOCKETSTATUS(SOCK_STATUS_CLOSE_TIMEOUT);
-			shutdownPutQueue(pSock);
+			pSock->socketShutdown();
 			nCount++;
 			nLen += _stprintf(szBuf + nLen, " %d:%u ", pSock->GETSESSIONIDX(), (UINT)pSock->GETSOCKET());
 		}

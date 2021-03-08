@@ -233,7 +233,6 @@ int CNWSocket::RecvPacket(int nRecvSize)
 
 		if(nRet != WSA_IO_PENDING && nRet != WSAEWOULDBLOCK)  { // 에러발생
 			gs_cLogger.DebugLog(LEVEL_ERROR, _T("nFD[%u] nSIdx:[%d] WSAGetLastError[%d] err_desc[%s]"), (UINT)m_socket, m_nSIdx, nRet, err_desc_socket[CERROR_SENDRECV]);
-			SETSOCKETSTATUS(SOCK_STATUS_CLOSE_ERROR);
 			socketShutdown();
 			return CERROR_SENDRECV;
 		}
@@ -293,8 +292,12 @@ bool CNWSocket::socketShutdown()	// gracefull socketclose
     {
 	    shutdown(m_socket, SD_BOTH);
         m_sockStatus &= ~SOCK_STATUS_CONNECTED;     // 추가적인 send 막음
-		g_pErrIocpQueue->putRTSQueue(OP_CLOSE, this);
-        return true;
+		gs_cLogger.PutLogQueue(LEVEL_TRACE, "socketShutdown");
+		if(CERROR_NONE == g_pErrIocpQueue->putRTSQueue(OP_CLOSE, this)) return true;
+		else {
+			closeSocket();
+			return true;
+		}
     }
     return false;
 

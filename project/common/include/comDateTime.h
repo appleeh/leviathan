@@ -195,11 +195,9 @@ public:
 	int setFileTime(TCHAR *pFilePath);
 	int setFileTime(FILETIME *pftWrite);
 #endif
-	int setFileTime(STDTime *pDateTime);
-	int setFileTime(time_t *fileTime);
+	int setFileTime(time_t *fileTime);	
 	bool isCompare(CFileTime *pCompare, E_OPERATOR eOP);
 	bool isCompare(unsigned int nCompare, E_OPERATOR eOP);
-	E_OPERATOR Compare(CFileTime *pCompare);
 	inline unsigned int getYear() { return m_nYear; }
 	inline unsigned int getDateTime() { return m_nDateTime; }
 private:
@@ -249,8 +247,6 @@ private:
 
 void initTimeZone();
 void getCurrentTime(STDTime *pTime);
-int  getDaysPerMonth(int nMonth, int nYear);
-
 extern STTimeZone g_stTZ;
 
 #endif	//	__CDateTime_H__

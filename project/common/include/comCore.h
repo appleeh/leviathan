@@ -164,12 +164,12 @@ public:
 	bool init(int nCount, int nIdx);
 	bool start();
 	bool quit();
-	bool putQueue(STEvent *p) { if (m_cThread.bActive()) { m_sLogQueue.push(p); m_cThread.sendSignal(); return true; } return false; }
-	STEvent *getEvent() { return (STEvent *)m_sLogQueue.pop(); }
+	bool putQueue(STEvent *p) { if (m_cThread.bActive()) { m_sEventQueue.push(p); m_cThread.sendSignal(); return true; } return false; }
+	STEvent *getEvent() { return (STEvent *)m_sEventQueue.pop(); }
 	CComThread m_cThread;
 
 private:
-	CQueueS	m_sLogQueue;
+	CQueueS	m_sEventQueue;
 };
 
 

@@ -414,13 +414,13 @@ bool CComQueueThread::initConfig(TCHAR *pConfigFile, int seq, TCHAR *pSection)
 	_stprintf(szSect, _T("%s_%d"), pSection, seq);
 	nCount = GetPrivateProfileInt(szSect, _T("LIST_COUNT"), 20, pConfigFile) + LIST_ADD_COUNT;
 
-	if (!m_sLogQueue.alloc(nCount, eAlloc_Type_none)) { printf("has Failed!! m_sLogQueue.alloc(%d)\n", nCount); return false; }
+	if (!m_sEventQueue.alloc(nCount, eAlloc_Type_none)) { printf("has Failed!! m_sEventQueue.alloc(%d)\n", nCount); return false; }
 	return true;
 }
 
 bool CComQueueThread::init(int nCount, int nIdx)
 {
-	if (!m_sLogQueue.alloc(nCount, eAlloc_Type_none)) { printf("has Failed!! m_sLogQueue.alloc(%d)\n", nCount); return false; }
+	if (!m_sEventQueue.alloc(nCount, eAlloc_Type_none)) { printf("has Failed!! m_sEventQueue.alloc(%d)\n", nCount); return false; }
 	m_cThread.setIdx(nIdx);
 	return true;
 }

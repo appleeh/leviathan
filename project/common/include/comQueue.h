@@ -10,7 +10,7 @@
 	2019.09.27 by KEH
 	-------------------------------------------------------------
 	ring queue : 자동 리스트 메모리 증가
-	다중 쓰레드 => push, 다중 쓰레드 => pop 모델
+	다중 쓰레드 => push, 싱글 쓰레드 => pop 모델
 *********************************************************************/
 #pragma once
 #include "comTypes.h"
@@ -49,9 +49,9 @@ private:
 	int	m_nFront;
 	int	m_nMax;
 	E_ALLOC_TYPE m_nObjAllocType;
-	SPIN_LOCK m_cLockPush; // for read (by realloc)
+	SPIN_LOCK m_cLockPush; // for push (by realloc)
 	COM_CRITICAL_SECTION m_CS;  // for realloc
-	SPIN_LOCK  m_cLockPop; // for push
+	SPIN_LOCK  m_cLockPop; // for pop, for realloc
 	int m_nOldMax;
 	atomic_nr m_nRealloc;
 
