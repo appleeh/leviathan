@@ -49,7 +49,7 @@ xfrm_cmdline(char *p, int len)
     }
 }
 
-int common::unix_na::get_usage_percent(char * dev_path)
+int common::unix_na::get_storage_usage(char * dev_path)
 {
 	unsigned long long total=0, free = 0;
 	double usage = 0;
@@ -77,75 +77,77 @@ int common::unix_na::get_mem_info(unsigned long *totMem, unsigned long *usedMem)
 	long nRes;
 
 	/* get system wide memory usage */
-	if ((fd = open("/proc/meminfo", O_RDONLY)) != -1)
-	{
-		if ((len = read(fd, buffer, sizeof(buffer) - 1)) > 0)
-		{
-			buffer[len] = '\0';
-			p = buffer - 1;
-
-			/* iterate thru the lines */
-			while (p != NULL)
-			{
-				p++;
-				if (p[0] == ' ' || p[0] == '\t')
-				{
-					/* skip */
-				}
-
-				switch (line)
-				{
-					case 0: 
-					{
-						if (strncmp(p, "MemTotal:", 9) == 0) {
-							p = skip_token(p);
-							memtotal = strtoul(p, &p, 10);
-						}
-						break;
-					}
-					case 1:
-					{
-						if (strncmp(p, "MemFree:", 8) == 0) {
-							p = skip_token(p);
-							memfree = strtoul(p, &p, 10);
-						}
-						break;
-					}
-					case 2: break;
-					case 3:
-					{
-						if (strncmp(p, "Buffers:", 8) == 0) {
-							p = skip_token(p);
-							buffers = strtoul(p, &p, 10);
-						}
-						break;
-					}
-					case 4:
-					{
-						if (strncmp(p, "Cached:", 7) == 0) {
-							p = skip_token(p);
-							cached = strtoul(p, &p, 10);
-						}
-						p = NULL; 
-						break;
-					}
-				}
-
-				/* move to the next line */
-				if (p) {
-					p = strchr(p, '\n');
-					line++;
-				}
-			}
-		}
+	if ((fd = open("/proc/meminfo", O_RDONLY)) < 0) return -1;
+	if ((len = read(fd, buffer, sizeof(buffer) - 1)) <= 0) {
 		close(fd);
+		return -1;
 	}
+
+	buffer[len] = '\0';
+	p = buffer - 1;
+
+	/* iterate thru the lines */
+	while (p != NULL)
+	{
+		p++;
+		if (p[0] == ' ' || p[0] == '\t')
+		{
+			/* skip */
+		}
+
+		switch (line)
+		{
+		case 0:
+		{
+			if (strncmp(p, "MemTotal:", 9) == 0) {
+				p = skip_token(p);
+				memtotal = strtoul(p, &p, 10);
+			}
+			break;
+		}
+		case 1:
+		{
+			if (strncmp(p, "MemFree:", 8) == 0) {
+				p = skip_token(p);
+				memfree = strtoul(p, &p, 10);
+			}
+			break;
+		}
+		case 2: break;
+		case 3:
+		{
+			if (strncmp(p, "Buffers:", 8) == 0) {
+				p = skip_token(p);
+				buffers = strtoul(p, &p, 10);
+			}
+			break;
+		}
+		case 4:
+		{
+			if (strncmp(p, "Cached:", 7) == 0) {
+				p = skip_token(p);
+				cached = strtoul(p, &p, 10);
+			}
+			p = NULL;
+			break;
+		}
+		}
+
+		/* move to the next line */
+		if (p) {
+			p = strchr(p, '\n');
+			line++;
+		}
+	} // end of while
+	close(fd);
+
 	*totMem = memtotal;
 
 	nRes = memtotal - (memfree + cached + buffers);
 	*usedMem = nRes;
+	double dRes = (nRes / memtotal) * 100;
+	return ceil(dRes);
 
-	return 1;
 }
 
 
@@ -297,14 +299,14 @@ int common::unix_na::getConnectionCount(int nPort)
 
 static unsigned long long lastTotalUser, lastTotalUserLow, lastTotalSys, lastTotalIdle;
 
-void common::unix_na::initCPU_machine() {
+void common::unix_na::init_cpu_machine() {
 	FILE* file = fopen("/proc/stat", "r");
 	fscanf(file, "cpu %llu %llu %llu %llu", &lastTotalUser, &lastTotalUserLow,
 		&lastTotalSys, &lastTotalIdle);
 	fclose(file);
 }
 
-int common::unix_na::getUsageCPU_machine() {
+int common::unix_na::get_cpu_usage_machine() {
 	double percent;
 	FILE* file;
 	unsigned long long totalUser, totalUserLow, totalSys, totalIdle, total;
@@ -343,7 +345,7 @@ int common::unix_na::getUsageCPU_machine() {
 static clock_t lastCPU, lastSysCPU, lastUserCPU;
 static int numProcessors;
 
-void common::unix_na::initCPU_process() {
+void common::unix_na::init_cpu_process() {
 	FILE* file;
 	struct tms timeSample;
 	char line[128];
@@ -361,7 +363,7 @@ void common::unix_na::initCPU_process() {
 }
 
 
-int common::unix_na::getUsageCPU_process() {
+int common::unix_na::get_cpu_usage_process() {
 	struct tms timeSample;
 	clock_t now;
 	double percent;

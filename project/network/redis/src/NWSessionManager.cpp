@@ -50,8 +50,8 @@ void CRedisList::listClear()
 		while (p) {
 			nLen = (int)(_tcslen((TCHAR *)p)) + 1;
 			gs_pMMgr->delBuf((char *)p, nLen);
-			p = getObj(idx);
 			idx++;
+			p = getObj(idx);
 		}
 	}
 	memset(m_pArgv, 0, sizeof(char *) * m_nMax);

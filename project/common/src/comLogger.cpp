@@ -343,7 +343,7 @@ bool CLogger::_setLoggerQueue(int nMax)
 		}
 	}
 	else if (nQueueMax < nMax) {
-		if (!m_sLogQueue.realloc(nMax, true)) {
+		if (!m_sLogQueue.realloc(nMax)) {
 			_stprintf(g_szMessage, _T("m_sLogQueue.realloc(%d,true) has Failed"), nMax);
 			comErrorPrint(g_szMessage);
 			return false;

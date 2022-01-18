@@ -85,12 +85,17 @@ typedef PTHREAD_START_ROUTINE LPTHREAD_START_ROUTINE;
 #endif
 
 
-#define GET_HDD_USAGE(path)			common::unix_na::get_usage_percent(path)
-#define GET_MEM_INFO(tot, used)		common::unix_na::get_mem_info(tot,used)
+#define GET_MEM_INFO(tot, used) common::unix_na::get_mem_info(tot, used)
+#define INIT_CPU_MACHINE()		common::unix_na::init_cpu_machine()
+#define INIT_CPU_PROCESS()		common::unix_na::init_cpu_process()
+#define GET_CPU_USAGE_MACHINE()	common::unix_na::get_cpu_usage_machine()
+#define GET_CPU_USAGE_PROCESS()	common::unix_na::get_cpu_usage_process()
+#define GET_STORAGE_USAGE(path) common::unix_na::get_storage_usage(path)
+
 #define INIT_INTERFACE()			common::unix_na::initInterface()
 #define SET_NET1()					common::unix_na::set_network_info1()
 #define SET_NET2()					common::unix_na::set_network_info2()
-#define GET_NET_INFO(idx, dp_Name, p_rxBytes, p_txBytes)	common::unix_na::get_network_info(idx, dp_Name, p_rxBytes, p_txBytes)
+#define GET_NET_INFO(idx, dp_Name, p_rxBytes, p_txBytes) common::unix_na::get_network_info(idx, dp_Name, p_rxBytes, p_txBytes)
 #define GET_CONNECTION_COUNT(nPort) common::unix_na::getConnectionCount(nPort)
  // DEC System에서는 socket 사용시 socklen_t가 정의가 되지 않은 경우 int로 정의한다.
   #ifdef	DEC
@@ -193,7 +198,7 @@ static const char g_s = '/';
  typedef HANDLE								THREAD_ID;		
  typedef common::win32::condition			THREAD_COND;
 
-#ifdef __X64
+#ifdef __X64_atomic
  typedef common::win32::win64_atomic		atomic_nr;
 #else
  typedef common::win32::win_atomic			atomic_nr;
@@ -222,8 +227,12 @@ typedef SRWLOCK								FAST_LOCK;
 #define FAST_LOCK_DESTROY(pLock)			// no exist
 #endif
 
-
-#define GET_CPU_USAGE()			common::win32::get_cpu_usage_percent()
+#define GET_MEM_INFO(tot, used) common::win32::get_mem_info(tot, used)
+#define INIT_CPU_MACHINE()		common::win32::init_cpu_machine()
+#define INIT_CPU_PROCESS()		common::win32::init_cpu_process()
+#define GET_CPU_USAGE_MACHINE()	common::win32::get_cpu_usage_machine()
+#define GET_CPU_USAGE_PROCESS()	common::win32::get_cpu_usage_process()
+#define GET_STORAGE_USAGE(path) common::win32::get_storage_usage(path)
 #define CURRENT_TIME GetTickCount()		// 현재 시간 
 static const TCHAR g_rc = '\n';
 static const TCHAR g_s = '\\';
@@ -258,20 +267,7 @@ enum E_SLOT_UNIT
 #define LIST_ADD_COUNT 10
 #define CORE_PLUS_POOL_COUNT 10
 
-// For Single Thread, 
-// if multithreads use this, you must do synchronized mechanism programming
-typedef struct {
-	int nLast;
-	int nFront;
-	int nMax;
-	void **pList;
-	inline int size() { int res = nLast - nFront; if (res < 0) return -res; return res; } // single thread (No Lock required)
-	inline void pop()					{ pList[nFront] = NULL; nFront++; if(nFront==nMax) nFront=0; } // single thread (No Lock required)
-	inline void push(void *pData)		{ pList[nLast] = pData; nLast++; if(nLast==nMax) nLast=0; } // multi thread (Lock required)
-	inline bool isFull()				{ return (nMax == size()); }
-	inline void * front()				{ return pList[nFront]; } // single thread (No Lock required)
-    inline void printfInfo()           { printf("nSize[%d] nMax[%d] nFront[%d] nLast[%d]\n", size(), nMax, nFront, nLast); }
-} StCOMQueue;
+
 
 struct STBuf
 {

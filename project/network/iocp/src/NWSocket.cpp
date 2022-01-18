@@ -211,6 +211,7 @@ int	CNWSocket::bindRecv()  // accept 이후 한번만 호출
 	m_nAddLen = 0;
 	memset(m_lpRecvData->pData, 0, m_lpRecvData->nTotLen);  // bufSize
 	memset(&m_lpRecvData->stCommon, 0, sizeof(STOVERLAPPED));
+	m_lpRecvData->lpClient = this;
 	return RecvPacket(m_lpRecvData->nTotLen);
 }
 
@@ -265,6 +266,7 @@ int CNWSocket::Send(char *pMsg, int nLen, LPSOCKETDATA lpSendData) // nLen : msg
 	lpSendData->stCommon.opCode = OP_SEND;
 	lpSendData->pData = pMsg;
 	lpSendData->nTotLen = nLen;
+	lpSendData->lpClient = this;
 
 	// WSASend 가 완료하면 반환값은 0 이다.    
 	int nRes = WSASend(m_socket, &sWsaBuf, 1, &lpSendData->nCurLen,

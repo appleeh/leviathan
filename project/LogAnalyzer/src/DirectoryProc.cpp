@@ -1,5 +1,6 @@
 #include "DirectoryProc.h"
 #include "comQSort.h"
+#include "comProfileutil.h"
 
 CDirectoryProc *g_pDProc;
 STDTime g_stProcStartTime;
@@ -23,26 +24,55 @@ CDirectoryProc::~CDirectoryProc()
 
 }
 
-int CDirectoryProc::getTimeAscendingFileList(char *pDir, STSortData **pResult)
+bool CDirectoryProc::initDirectoryOption(STFileList *pResult, STFilterData *pFilter) 
+{
+	STFilterData *pFilter2 = NULL;
+	int nRes;
+	char szBuf[1024];
+	if (g_stConfig.nSourceFlag & eSourceFlag_IS_FILTER) {
+		pFilter2 = pFilter;
+		nRes = GetPrivateProfileInt("RANGE", _T("FILTER_FUNC"), 1, g_pProcessConfig);
+		if (nRes == 1) {
+			pFilter2->pFunc = filter_stringCompare;
+		}
+		else if (nRes == 2) {
+			pFilter2->pFunc = filter_dateTimeCompare;
+		}
+		else return false;
+		
+		nRes = GetPrivateProfileInt("RANGE", _T("FILTER_OPERATOR"), 1, g_pProcessConfig);
+		if (eOperator_NONE < nRes && nRes < eOperator_MAX) pFilter2->eOP = (E_OPERATOR)nRes;
+		else return false;
+
+		nRes = GetPrivateProfileString("RANGE", _T("FILTER_DATA"), _T(""), szBuf, sizeof(szBuf), g_pProcessConfig);
+		if (nRes) {
+			pFilter2->pData = szBuf;
+		}
+		else return false;
+	}
+	if (g_stConfig.nSourceFlag & eSourceFlag_IS_RECURSIVE) {
+		pResult->init(pResult->root, true, false, true);
+	}
+	if (!CFileUtil::GetFileList(pResult, pFilter2)) return false;
+	return true;
+}
+
+int CDirectoryProc::getTimeAscendingFileList(STFileList *pFileList, STSortData **pResult)
 {
 	STSortData *pSortData = NULL, *pSortDataS;
 	STFileInfoEx *pFileInfo;
 	CSList *pList;
-	STFileList stList;
 	STFilterData stFilter;
 	int i, nSize, nCount;
-	stList.pList = NULL;
-	stList.root = pDir;
-	stList.nFlag = 0;
 	if (g_stConfig.pSourceFile) {
 		stFilter.pData = g_stConfig.pSourceFile;
 		stFilter.pFunc = filter_stringCompare;
-		if (!CFileUtil::GetFileList(&stList, &stFilter)) return 0;
+		if (!CFileUtil::GetFileList(pFileList, &stFilter)) return 0;
 	}
 	else {
-		if (!CFileUtil::GetFileList(&stList, NULL)) return 0;
+		if (!initDirectoryOption(pFileList, &stFilter)) return 0;
 	}
-	pList = stList.pList;
+	pList = pFileList->pList;
 	nCount = pList->size();
 	nSize = sizeof(STSortData) * nCount;
 	pSortData = (STSortData *)gs_pMMgr->newBuf(nSize);
@@ -58,7 +88,7 @@ int CDirectoryProc::getTimeAscendingFileList(char *pDir, STSortData **pResult)
 	}
 	SortEx(pSortDataS, nCount);
 	*pResult = pSortDataS;
-	memcpy(m_pFileList, &stList, sizeof(STFileList));
+	memcpy(m_pFileList, pFileList, sizeof(STFileList));
 	return nCount;
 }
 
@@ -112,9 +142,12 @@ bool CDirectoryProc::proc(char *pDir)
 	char szFileName[256];
 	STSortData *pSortData = NULL;
 	STFileInfoEx *pFileInfo;
+	STFileList stList;
+	stList.pList = NULL;
+	stList.root = pDir;
+	stList.nFlag = 0;
 
-	nCount = getTimeAscendingFileList(pDir, &pSortData);
-
+	nCount = getTimeAscendingFileList(&stList, &pSortData);
 	if (!nCount) return false;
 
 	if (!verificationNSetFileProc()) return false;
@@ -127,8 +160,9 @@ bool CDirectoryProc::proc(char *pDir)
 	{
 		pFileInfo = (STFileInfoEx *)pSortData[i].p;
 		if (pFileInfo->stat == 'F') {
-			gs_cLogger.PutLogQueue(LEVEL_TRACE, _T("readFILEStart [%s] [%s]"), pDir, pFileInfo->fname);
-			sprintf(szFileName, "%s%s", pDir, pFileInfo->fname);
+			g_stConfig.pReport->LogPrint(LEVEL_INFO, _T("readFILEStart [%s] [%s]"), pDir, pFileInfo->fname);
+			if (stList.nFlag & SAVE_FULLPATH) { strcpy(szFileName, pFileInfo->fname); }
+			else sprintf(szFileName, "%s%s", pDir, pFileInfo->fname);
 			if (cFileProc.init(szFileName, pFileInfo->nSize)) {
 				(cFileProc.*m_fpFileProc)();
 			}

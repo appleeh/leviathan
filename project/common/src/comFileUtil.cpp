@@ -318,6 +318,9 @@ bool CFileUtil::appendFileList(CSList **flist, TCHAR *fname, TCHAR ftype, CFileT
 void CFileUtil::destroyFileList(STFileList *pResult)
 {
 	int nIdx = 0;
+
+	if (!pResult || !pResult->pList) return;
+
 	STFileInfoEx *pFileInfo = (STFileInfoEx *)pResult->pList->getNext(&nIdx);
 	while (pFileInfo) {
 		gs_pMMgr->delString(pFileInfo->fname);

@@ -116,7 +116,7 @@ void CAnalyzer_KeyValue::setLine(char *p, STAnalyzer1_Line *pSTLine)
 {
 	int nValue;
 	if (pSTLine->pValueKey)	{
-		nValue = getInterval(p, pSTLine->pValueKey);
+		nValue = getIntValue(p, pSTLine->pValueKey);
 		setUnitData(pSTLine->m_pUnitDataList, nValue);
 	}
 	pSTLine->nTotalLine++;

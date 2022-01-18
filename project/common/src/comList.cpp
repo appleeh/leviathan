@@ -7,7 +7,6 @@ CSList::CSList()
 	m_pArray = NULL;
 	m_nUse = 0;
 	m_nLast = 0;
-	m_nDelIdx = 0;
 	m_nMax = 0;
 	m_nObjAllocType = eAlloc_Type_none;
 }
@@ -58,7 +57,6 @@ void CSList::clear()			// list 는 남겨 놓고 내부 메모리는 가능한 부분은 파괴한다
 	memset(m_pArray, 0, sizeof(void *) * m_nMax);
 	m_nUse = 0;
 	m_nLast = 0;
-	m_nDelIdx = 0;
 }
 
 
@@ -79,41 +77,7 @@ int CSList::__alloc(int nMaxCount)
 	return nMaxCount;
 }
 
-bool CSList::add(void* Obj, int *pIdx)
-{
-	int nIdx, i;
 
-	if (m_nUse >= m_nMax) {
-		if (!__alloc(m_nMax + UNIT_ADD_SIZE)) {
-			return false;
-		}
-		nIdx = m_nMax;
-		m_nMax += UNIT_ADD_SIZE;
-		goto ADD_SUCCESS;
-	}
-
-	if (!m_pArray[m_nDelIdx]) { nIdx = m_nDelIdx; goto ADD_SUCCESS; }
-
-	nIdx = m_nLast;
-	for (i = 0; i < m_nMax; i++)
-	{
-		if (nIdx >= m_nMax) nIdx = 0;
-		if (!m_pArray[nIdx]) {
-			goto ADD_SUCCESS;
-		}
-		nIdx++;
-	}
-	gs_cLogger.DebugLog(LEVEL_ERROR, _T("i[%d] m_nLast[%d] m_nCurCount[%d]"), nIdx, m_nLast, m_nUse);
-	return false;
-
-ADD_SUCCESS:
-	m_nUse++;
-	m_pArray[nIdx] = Obj;
-	m_nLast++;
-	//_stprintf(g_szMessage, _T("CMemList::add i[%d] m_nLast[%d] m_nCurCount[%d]"), nIdx, m_nLast, m_nUse);
-	if (pIdx) *pIdx = nIdx;
-	return true;
-}
 
 bool CSList::push_back(void*Obj, int *pIdx)
 {

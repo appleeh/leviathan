@@ -4,90 +4,89 @@
 
 CQueueS::CQueueS()
 {
-	memset(g_szMessage, 0, LEN_MEM_MESSAGE);
-	m_pArray = NULL;
-	m_nMax = 0;
-	m_nFront = 0;
-	m_nLast = 0;
 	SPIN_LOCK_INIT(&m_cLockPush);
-	SPIN_LOCK_INIT(&m_cLockPop);
-	m_nOldMax = 0;
+	m_pQueue = NULL;
+	m_pQueueList = NULL;
 }
-
 
 CQueueS::~CQueueS(void)
 {
-	if (!m_pArray) return;
+	STCOMQueue* pQueue;
+	int i = 0;
+	if (m_pQueueList) {
+		pQueue = (STCOMQueue*)m_pQueueList->getNext(&i);
+		while (pQueue) {
+			destroy(pQueue);
+			m_pQueueList->del(i,false);  // 두번째 인자 : deepDelete -> false, destory(pQueue) 에서 모두 파괴 완료
+			i++;
+			pQueue = (STCOMQueue*)m_pQueueList->getNext(&i);
+		}
+		delete m_pQueueList;
+		m_pQueueList = NULL;
+		m_pQueue = NULL;
+	}
+	
+	SPIN_LOCK_DESTROY(&m_cLockPush);
+}
 
+
+void CQueueS::destroy(STCOMQueue *pQueue)
+{
 	void *p;
-	int i;
-	if (ISABLETODELETE(m_nObjAllocType)) {
-		for (i = 0; i < m_nMax; i++) {
-			p = m_pArray[i];
-			if (p) {
-				switch (m_nObjAllocType) {
-				case eAlloc_Type_new:	delete p; break;
-				case eAlloc_Type_alloc:	free(p); break;
-				case eAlloc_Type_BufPool:	gs_pMMgr->delBuf((char *)p, STRING_SIZE((TCHAR *)p)); break;
-				case eAlloc_Type_newArray:	delete[] p; break;
-				case eAlloc_Type_none: break;
-				case eAlloc_Type_MemPool: break;
+	if (pQueue)
+	{
+		if (pQueue->pList) 
+		{
+			if (ISABLETODELETE(m_nObjAllocType)) {
+				while ((p = pQueue->front())) {
+					switch (m_nObjAllocType) {
+					case eAlloc_Type_new:	delete p; break;
+					case eAlloc_Type_alloc:	free(p); break;
+					case eAlloc_Type_BufPool:	gs_pMMgr->delBuf((char*)p, STRING_SIZE((TCHAR*)p)); break;
+					case eAlloc_Type_newArray:	delete[] p; break;
+					}
+					pQueue->pop();
 				}
 			}
-		}			
+			free(pQueue->pList);
+			pQueue->pList = NULL;
+		}
+		delete pQueue;
 	}
-	free(m_pArray);
-	m_pArray = 0;
-	SPIN_LOCK_DESTROY(&m_cLockPush);
-	SPIN_LOCK_DESTROY(&m_cLockPop);
 }
 
 
 
 bool CQueueS::alloc(int nMaxCount, E_ALLOC_TYPE type)
 {
-	m_pArray = (void **)calloc(nMaxCount, sizeof(void*));
-	if (m_pArray == 0) {
-		//gs_cLogger.DebugLog(LEVEL_ERROR, "m_pArray calloc ERROR nMaxCount[%d]", nMaxCount);
-		return false;
+	if (!m_pQueueList)
+	{
+		m_pQueueList = new CSList();
+		m_pQueueList->alloc(12);
 	}
-
-	m_nMax = nMaxCount;
+	if (m_pQueue) {
+		destroy(m_pQueue);
+	}
 	m_nObjAllocType = type;
-	//gs_cLogger.PutLogQueue(LEVEL_INFO, _T("CQueue<T>::alloc nMaxCount[%d]"), nMaxCount);
-	return true;
+	m_pQueue = __realloc(nMaxCount);
+	if(m_pQueue) return true;
+	return false;
 }
 
 
-bool CQueueS::realloc(int nMaxCount, bool bInit)
+STCOMQueue * CQueueS::__realloc(int nMaxCount)
 {
-	void** newPtr, **oldPtr = m_pArray;
-	newPtr = (void **)calloc(nMaxCount, sizeof(void*));
-	if (!newPtr) {
-		printf("[%p] calloc has Failed\n", m_pArray);
-		m_nRealloc.init();
-		m_CS.leave();
-		return false;
+	STCOMQueue *pQueue = new (std::nothrow) STCOMQueue();
+	if (!pQueue) return NULL;
+
+	pQueue->init();
+	pQueue->pList = (void **)calloc(nMaxCount, sizeof(void*));
+	if (!pQueue->pList) {
+		return NULL;
 	}
-	if (bInit) {
-		m_pArray = newPtr;
-		m_nMax = nMaxCount;
-		memset(m_pArray, 0, nMaxCount * sizeof(void*));
-	}
-	else {
-		memcpy(newPtr, m_pArray, m_nMax * sizeof(void*));
-		printf("[%p] ################### realloc success m_nLast[%d] m_nMax[%d] nMaxCount[%d]\n", m_pArray, m_nLast, m_nMax, nMaxCount);
-		SPIN_LOCK_ENTER(&m_cLockPop);
-		m_pArray = newPtr;
-		m_nLast = m_nMax;
-		m_nMax = nMaxCount;
-		SPIN_LOCK_LEAVE(&m_cLockPop);
-		m_nOldMax = m_nLast;
-	}
+	pQueue->nMax = nMaxCount;
 	m_nRealloc.init();
-	m_CS.leave();
-	if(oldPtr) free(oldPtr);
-	return true;
+	return pQueue;
 }
 
 bool CQueueS::push(void* pData) // multi thread (Lock required)
@@ -96,77 +95,40 @@ bool CQueueS::push(void* pData) // multi thread (Lock required)
 		m_CS.enter();
 		m_CS.leave();
 	}
-	else if(m_pArray[m_nLast]) {
+	else if(m_pQueue->isFull()) {
 		if (m_nRealloc.atomic_compare_exchange(1, 0)) {
 			m_CS.enter();
 			m_CS.leave();
 		}
 		else {
 			m_CS.enter();
-			if (!realloc(m_nMax << 1)) {
-				return false;
-			}
+			m_pQueue = __realloc(m_pQueue->capacity() << 1);
+			if (!m_pQueue) { m_CS.leave(); return false; }
+			m_pQueueList->push_back(m_pQueue);
+			m_CS.leave();
 		}
 	}
 
 	SPIN_LOCK_ENTER(&m_cLockPush);
-	m_pArray[m_nLast] = pData;
-	m_nLast++;
-	if (m_nLast == m_nMax) m_nLast = 0;
+	m_pQueue->push(pData);
 	SPIN_LOCK_LEAVE(&m_cLockPush);
+
 	return true;
 }
 
-//void* CQueueS::pop() // single thread (Lock required for realloc)
-//{
-//	void* res;
-//	SPIN_LOCK_ENTER(&m_cLockPop);
-//	res = m_pArray[m_nFront];
-//	if (res) {
-//		m_pArray[m_nFront] = 0;
-//		m_nFront++;
-//		if (m_nOldMax) {
-//			if(m_nFront == m_nOldMax) m_nFront = 0;
-//		}
-//		else if (m_nFront == m_nMax) m_nFront = 0;
-//	}
-//	else if (m_nOldMax) {
-//		res = m_pArray[m_nOldMax]; 
-//		m_pArray[m_nOldMax] = 0;
-//		m_nFront = m_nOldMax+1;
-//		m_nOldMax = 0;
-//	}
-//
-//	SPIN_LOCK_LEAVE(&m_cLockPop);
-//	return res;
-//}
 
-
-void* CQueueS::pop() // single thread (Lock required for realloc)
+void* CQueueS::pop() // single thread 
 {
-	void* res;
-	SPIN_LOCK_ENTER(&m_cLockPop);
-	res = m_pArray[m_nFront];
-	if (res) {
-		m_pArray[m_nFront] = 0;
-		m_nFront++;
-		if (m_nFront == m_nMax) m_nFront = 0;
-		SPIN_LOCK_LEAVE(&m_cLockPop);
-		return res;
-	}
-	else if (m_nOldMax) {
-		if (m_pArray[0]) {
-			res = m_pArray[0];
-			m_pArray[0] = 0;
-			m_nFront = 1;
-		}
-		else {
-			res = m_pArray[m_nOldMax];
-			m_pArray[m_nOldMax] = 0;
-			m_nFront = m_nOldMax + 1;
-			m_nOldMax = 0;
+	int nIdx = 0;
+	STCOMQueue *pQ = (STCOMQueue *)m_pQueueList->getNext(&nIdx);
+
+	if (!pQ) return NULL;
+	
+	void* res = __pop(pQ);
+	if (!res) {
+		if (1 < m_pQueueList->size()) {
+			m_pQueueList->del(nIdx, true); // pQ deep destroy
 		}
 	}
-	SPIN_LOCK_LEAVE(&m_cLockPop);
 	return res;
 }

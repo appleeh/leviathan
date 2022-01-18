@@ -29,7 +29,6 @@ public:
 	void clear();			
 	inline int alloc(int nMaxCount, E_ALLOC_TYPE type = eAlloc_Type_new) { m_nObjAllocType = type;  m_nMax = __alloc(nMaxCount); return m_nMax; }
 
-	bool add(void *p, int *pIdx = NULL);
 	bool push_back(void*p, int *pIdx = NULL);
 	bool del(void*p, bool bDeepDelete=true);
 	bool del(int i, bool bDeepDelete = true);
@@ -56,9 +55,8 @@ private:
 	void**		m_pArray;
 	int	m_nUse;
 	int	m_nLast;
-	int	m_nDelIdx;
 	int	m_nMax;
 	E_ALLOC_TYPE m_nObjAllocType;
 	int __alloc(int nMaxCount);
-	inline void _DEL(int i) { m_pArray[i] = 0; m_nUse--; m_nDelIdx = i; }
+	inline void _DEL(int i) { m_pArray[i] = 0; m_nUse--;}
 };

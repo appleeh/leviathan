@@ -173,7 +173,7 @@ void getTimeInterval(STDTime *pTime1, STDTime *pTime2, STDTime *pTimeTarget)
 }
 
 
-int getInterval(char *pSorceString, char *pKey)
+int getIntValue(char *pSorceString, char *pKey)
 {
 	char szBuf[24];
 	char *p2, *p = strstr(pSorceString, pKey);

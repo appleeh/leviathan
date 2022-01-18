@@ -71,6 +71,14 @@ bool CHandler::init()
 		}
 		g_stConfig.pSourceDirectory = gs_pMMgr->newBuf(nRes + 1);
 		strcpy(g_stConfig.pSourceDirectory, szName);
+		nRes = GetPrivateProfileInt(szSector, _T("DIRECTORY_RECURSIVE"), 0, g_pProcessConfig);
+		if (nRes) {
+			g_stConfig.nSourceFlag |= eSourceFlag_IS_RECURSIVE;
+			nRes = GetPrivateProfileInt(szSector, _T("IS_FILTER"), 0, g_pProcessConfig);
+			if (nRes) {
+				g_stConfig.nSourceFlag |= eSourceFlag_IS_FILTER;
+			}
+		}
 	}
 	else {
 		comErrorPrint("config source flag is NONE");
@@ -160,6 +168,7 @@ bool CHandler::initAnalistConfig()
 			case eAType_DateTime		: m_pAnalyzerList[i] = new CAnalyzer_DateTime();		break;
 			case eAType_BetweenLines	: m_pAnalyzerList[i] = new CAnalyzer_BetweenLines();	break;
 			case eAType_Average			: m_pAnalyzerList[i] = new CAnalyzer_Average();			break;
+			case eAType_Sequence		: m_pAnalyzerList[i] = new CAnalyzer_Sequence();		break;
 			}
 			bRes = m_pAnalyzerList[i]->initConfig(g_pProcessConfig, szSector);
 			if (!bRes) {

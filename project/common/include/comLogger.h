@@ -30,7 +30,7 @@ thread safty queue use
 #define MAX_LOGFILE_SIZE 600000000
 enum Default_Log_Option
 {
-	eLDOPT_LISTMAX = 20,
+	eLDOPT_LISTMAX = 1024,
 	eLDOPT_ISPRINTF = 0,
 	eLDOPT_STL_NO = 0,
 	eLDOPT_LOGLEVEL = 3,

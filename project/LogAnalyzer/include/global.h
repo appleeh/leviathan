@@ -1,14 +1,14 @@
 #pragma once
 
-#include "comList.h"
 #include "comLogger.h"
-#include "comFileUtil.h"
 
 enum ESourceFlag
 {
 	eSourceFlag_NONE=0,
-	eSourceFlag_FILE=1,
-	eSourceFlag_DIRECTORY=2
+	eSourceFlag_FILE=0x01,
+	eSourceFlag_DIRECTORY= 0x02,
+	eSourceFlag_IS_RECURSIVE=0x04,
+	eSourceFlag_IS_FILTER=0x08
 };
 
 #define MAX_KEYWORD 16
@@ -77,7 +77,7 @@ void parsingTimeLog(char *pLog, STDTime *pTime, STDateTimeExp *pDTE);
 void setBeginningTime(STDTime *pTarget, STDTime *pNewTime);
 void setEndingTime(STDTime *pTarget, STDTime *pNewTime);
 void getTimeInterval(STDTime *pTime1, STDTime *pTime2, STDTime *pTimeTarget);
-int getInterval(char *pSorceString, char *pKey);
+int getIntValue(char *pSorceString, char *pKey);
 float getAvg(int nCount, float *pNum);
 int getMiliseconds(STDTime *pTime, int nLastLen);
 int getTimeCount(STDTime *pTime, int nUnitCount, int nCountSec);

@@ -47,6 +47,10 @@ CFileTime::CFileTime()
 {
 }
 
+CFileTime::~CFileTime()
+{
+}
+
 int CFileTime::setFileTime(TCHAR *pFilePath)
 {
 	struct	tm	m_tm, *ltm = &m_tm;
@@ -130,8 +134,25 @@ int CFileTime::setFileTime(time_t *fileTime)
 	return m_nDateTime;
 }
 
-CFileTime::~CFileTime()
+int CFileTime::setFileTime(STDTime *pDTTime)
 {
+	TCHAR szDate[16];
+	_stprintf(szDate, "%02d%02d%02d%02d%02d", pDTTime->nMonth, pDTTime->nDay, pDTTime->nHour, pDTTime->nMinute, pDTTime->nSec);
+	m_nDateTime = atoi(szDate);
+	_stprintf(szDate, "%04d", pDTTime->nYear);
+	m_nYear = atoi(szDate);
+	return m_nDateTime;
+}
+
+E_OPERATOR CFileTime::Compare(CFileTime *pCompare)
+{
+	if (pCompare->getYear() == m_nYear) {
+		if (pCompare->getDateTime() == m_nDateTime) return eOperator_EQ;
+		if (pCompare->getDateTime() < m_nDateTime) return eOperator_GT;
+		else return eOperator_LT;
+	}
+	else if(pCompare->getYear() < m_nYear) return eOperator_GT;
+	return eOperator_LT;
 }
 
 
@@ -496,5 +517,17 @@ void getCurrentTime(STDTime *pTime)
 	pTime->nSec = sysTm.wSecond;
 	pTime->nLast = sysTm.wMilliseconds;
 #endif
+}
+
+int getDaysPerMonth(int nMonth, int nYear)
+{
+	int nDaysPerMonth[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+	if (nMonth == 2) {
+		if ((nYear % 400) == 0) return 29;
+		if ((nYear % 4 == 0) && (nYear % 100 !=0))  return 29;
+		return 28;
+	}
+	else return nDaysPerMonth[nMonth];
 }
 

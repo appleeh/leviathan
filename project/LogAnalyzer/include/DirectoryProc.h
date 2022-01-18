@@ -17,10 +17,11 @@ public:
 private:
 	STFileList *m_pFileList;
 	void Dreport();
-	int getTimeAscendingFileList(char *pDir, STSortData **pResult);
+	int getTimeAscendingFileList(STFileList *pFileList, STSortData **pResult);
 	bool verificationNSetFileProc();
 
 	void (CFileProc::*m_fpFileProc)();
+	bool initDirectoryOption(STFileList *pResult, STFilterData *pFilter);
 };
 
 extern CDirectoryProc *g_pDProc;

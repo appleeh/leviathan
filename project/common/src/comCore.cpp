@@ -318,14 +318,8 @@ bool CScheduler::initConfig(TCHAR *pConfigFile, int i, TCHAR *pSection)
 	nCount = GetPrivateProfileInt(szSect, _T("LIST_COUNT"), 0, pConfigFile);
 	if (!nCount) return false;
 	m_nMilliSecWait = GetPrivateProfileInt(szSect, _T("TIME_WAIT"), -1, pConfigFile);
-	m_nMillSecHalf = m_nMilliSecWait / 2;
-	m_nMillSecGoal = CURRENT_TIME + m_nMilliSecWait;
 
-	m_pTimeList = new CMemList<STIntervalInfo>();
-	if (!m_pTimeList->alloc(nCount, eAlloc_Type_none)) { delete m_pTimeList; printf("has Failed!! m_pTimeList->alloc(%d)\n", nCount); return false; }
-
-	return true;
-
+	return init(nCount, m_nMilliSecWait, i);
 }
 
 bool CScheduler::init(int nCount, int nMilliSecWait, int nIdx)
@@ -412,10 +406,9 @@ bool CComQueueThread::initConfig(TCHAR *pConfigFile, int seq, TCHAR *pSection)
 	int nCount;
 
 	_stprintf(szSect, _T("%s_%d"), pSection, seq);
-	nCount = GetPrivateProfileInt(szSect, _T("LIST_COUNT"), 20, pConfigFile) + LIST_ADD_COUNT;
+	nCount = GetPrivateProfileInt(szSect, _T("LIST_COUNT"), 0, pConfigFile);
 
-	if (!m_sEventQueue.alloc(nCount, eAlloc_Type_none)) { printf("has Failed!! m_sEventQueue.alloc(%d)\n", nCount); return false; }
-	return true;
+	return init(nCount, seq);
 }
 
 bool CComQueueThread::init(int nCount, int nIdx)
@@ -662,26 +655,22 @@ bool CCoreList::initComThread(TCHAR *pConfigFile, TCHAR *pSection)
 	nCount = GetPrivateProfileInt(pSection, _T("LIST_COUNT"), 0, pConfigFile);
 	if (nCount)
 	{
-		if (!m_pThreadList) {
-			m_pThreadList = new CTList<CComThread>();
-			if (!m_pThreadList->alloc(nCount + LIST_ADD_COUNT, eAlloc_Type_none)) {
-				comErrorPrint("m_pThreadList = new CTList<CComThread>() is NULL");
-				return false;
+		if (initComThread(nCount))
+		{
+			for (i = 0; i < nCount; i++) {
+				pComThread = new (std::nothrow) CComThread();
+				if (!pComThread) {
+					comErrorPrint("new (std::nothrow) CComThread() is NULL");
+					return false;
+				}
+				if (!m_pThreadList->push_back(pComThread, &idx)) {
+					comErrorPrint("m_pThreadList->push_back");
+					return false;
+				}
+				pComThread->setIdx(idx);
 			}
 		}
-
-		for (i = 0; i < nCount; i++) {
-			pComThread = new (std::nothrow) CComThread();
-			if (!pComThread) {
-				comErrorPrint("new (std::nothrow) CComThread() is NULL");
-				return false;
-			}
-			if (!m_pThreadList->push_back(pComThread, &idx)) {
-				comErrorPrint("m_pThreadList->push_back");
-				return false;
-			}
-			pComThread->setIdx(idx);
-		}
+		else return false;
 	}
 	return true;
 }
@@ -696,38 +685,32 @@ bool CCoreList::initLogWriter(TCHAR *pConfigFile, TCHAR *pSection, bool bSystem)
 
 	nCount = GetPrivateProfileInt(pSection, _T("LIST_COUNT"), 1, pConfigFile);
 	if (nCount) {
-		if (!m_pWriterList) {
-			m_pWriterList = new CTList<CSTLogger>();
-			if (!m_pWriterList->alloc(nCount + LIST_ADD_COUNT, eAlloc_Type_none)) {
-				sprintf(szErrorMsg, "m_pWriterList->alloc nCnt[%d]", nCount + LIST_ADD_COUNT);
-				comErrorPrint(szErrorMsg);
-				return false;
-			}
-		}
-
-		for (i = 0; i < nCount; i++) {
-			pWriter = new (std::nothrow) CSTLogger();
-			if (!pWriter) {
-				sprintf(szErrorMsg, "[seq:%d] new (std::nothrow) CSTLogger() is NULL", i);
-				comErrorPrint(szErrorMsg);
-				return false;
-			}
-			if (!pWriter->initConfig(pConfigFile, i, pSection)) {
-				if (bSystem) {
-					bRes = pWriter->init(LIST_ADD_COUNT, 0);
-				}
-				if(!bRes) {
-					sprintf(szErrorMsg, "[seq:%d] pWriter->init", i);
+		if (initLogWriter(nCount))
+		{
+			for (i = 0; i < nCount; i++) {
+				pWriter = new (std::nothrow) CSTLogger();
+				if (!pWriter) {
+					sprintf(szErrorMsg, "[seq:%d] new (std::nothrow) CSTLogger() is NULL", i);
 					comErrorPrint(szErrorMsg);
 					return false;
 				}
+				if (!pWriter->initConfig(pConfigFile, i, pSection)) {
+					if (bSystem) {
+						bRes = pWriter->init(LIST_ADD_COUNT, 0);
+					}
+					if (!bRes) {
+						sprintf(szErrorMsg, "[seq:%d] pWriter->init", i);
+						comErrorPrint(szErrorMsg);
+						return false;
+					}
+				}
+				if (!m_pWriterList->push_back(pWriter, &idx)) {
+					sprintf(szErrorMsg, "[seq:%d] pWriter->push_back", idx);
+					comErrorPrint(szErrorMsg);
+					return false;
+				}
+				pWriter->m_cThread.setIdx(idx);
 			}
-			if (!m_pWriterList->push_back(pWriter, &idx)) {
-				sprintf(szErrorMsg, "[seq:%d] pWriter->push_back", idx);
-				comErrorPrint(szErrorMsg);
-				return false;
-			}
-			pWriter->m_cThread.setIdx(idx);
 		}
 	}
 	return true;
@@ -736,51 +719,35 @@ bool CCoreList::initLogWriter(TCHAR *pConfigFile, TCHAR *pSection, bool bSystem)
 
 bool CCoreList::initScheduler(TCHAR *pConfigFile, TCHAR *pSection)
 {
-	int nCount, i, nMax, idx;
+	int nCount, i, nPoolCount, idx;
 	CScheduler *pScheduler;
 	char szErrorMsg[128];
 	// scheduler
 	nCount = GetPrivateProfileInt(pSection, _T("LIST_COUNT"), 0, pConfigFile);
 	if (nCount) {
-		if (!m_pSchedulerList) {
-			m_pSchedulerList = new (std::nothrow) CTList<CScheduler>();
-			if (!m_pSchedulerList) {
-				sprintf(szErrorMsg, "new (std::nothrow) CTList<CScheduler>() is NULL");
-				comErrorPrint(szErrorMsg);
-				return false;
-			}
-			if (!m_pSchedulerList->alloc(nCount + LIST_ADD_COUNT, eAlloc_Type_none)) {
-				sprintf(szErrorMsg, "m_pSchedulerList->alloc nCnt[%d]", nCount + LIST_ADD_COUNT);
-				comErrorPrint(szErrorMsg);
-				return false;
-			}
-		}
+		nPoolCount = GetPrivateProfileInt(pSection, _T("TIME_POOL_MAX"), 0, pConfigFile) + CORE_PLUS_POOL_COUNT;
 
-		nMax = GetPrivateProfileInt(pSection, _T("TIME_POOL_MAX"), 0, pConfigFile) + CORE_PLUS_POOL_COUNT;
-		m_pIntervalPool = new (std::nothrow) CMemPool<STIntervalInfo>();
-		if (!m_pIntervalPool->alloc(nMax, eAlloc_Type_alloc)) {
-			printf("has Failed!! m_pIntervalPool.alloc(%d)\n", nMax);
-			return false;
-		}
-
-		for (i = 0; i < nCount; i++) {
-			pScheduler = new (std::nothrow) CScheduler();
-			if (!pScheduler) {
-				sprintf(szErrorMsg, "[seq:%d] new (std::nothrow) CScheduler() is NULL", i);
-				comErrorPrint(szErrorMsg);
-				return false;
+		if (initScheduler(nCount, nPoolCount))
+		{
+			for (i = 0; i < nCount; i++) {
+				pScheduler = new (std::nothrow) CScheduler();
+				if (!pScheduler) {
+					sprintf(szErrorMsg, "[seq:%d] new (std::nothrow) CScheduler() is NULL", i);
+					comErrorPrint(szErrorMsg);
+					return false;
+				}
+				if (!pScheduler->initConfig(pConfigFile, i, pSection)) {
+					sprintf(szErrorMsg, "[seq:%d] pScheduler->init", i);
+					comErrorPrint(szErrorMsg);
+					return false;
+				}
+				if (!m_pSchedulerList->push_back(pScheduler, &idx)) {
+					sprintf(szErrorMsg, "[seq:%d] pScheduler->push_back", idx);
+					comErrorPrint(szErrorMsg);
+					return false;
+				}
+				pScheduler->m_cThread.setIdx(idx);
 			}
-			if (!pScheduler->initConfig(pConfigFile, i, pSection)) {
-				sprintf(szErrorMsg, "[seq:%d] pScheduler->init", i);
-				comErrorPrint(szErrorMsg);
-				return false;
-			}
-			if (!m_pSchedulerList->push_back(pScheduler, &idx)) {
-				sprintf(szErrorMsg, "[seq:%d] pScheduler->push_back", idx);
-				comErrorPrint(szErrorMsg);
-				return false;
-			}
-			pScheduler->m_cThread.setIdx(idx);
 		}
 	}
 	return true;
@@ -789,23 +756,16 @@ bool CCoreList::initScheduler(TCHAR *pConfigFile, TCHAR *pSection)
 
 bool CCoreList::initQueueThread(TCHAR *pConfigFile, TCHAR *pSection)
 {
-	int nCount, i, nMax, idx, nTmp;
+	int nCount, i, idx, nPoolCount, nTmp;
 	CComQueueThread *pEventThread;
 	nCount = GetPrivateProfileInt(pSection, _T("LIST_COUNT"), 0, pConfigFile);
 	if (nCount)
 	{
-		m_pEventThreadList = new CTList<CComQueueThread>();
-		if (!m_pEventThreadList->alloc(nCount + LIST_ADD_COUNT, eAlloc_Type_none)) {
-			printf("has Failed!! m_pEventThreadList = new CTList<CComQueueThread>()\n");
-			return false;
-		}
-		nTmp = nCount * 20;
-		nMax = GetPrivateProfileInt(pSection, _T("EVENT_POOL_MAX"), nTmp, pConfigFile) + CORE_PLUS_POOL_COUNT;
-		m_pEventPool = new CMemPool<STEvent>();
-		if (!m_pEventPool->alloc(nMax, eAlloc_Type_alloc)) {
-			printf("has Failed!! m_pEventPool.alloc(%d)\n", nMax);
-			return false;
-		}
+		nPoolCount = GetPrivateProfileInt(pSection, _T("EVENT_POOL_MAX"), 0, pConfigFile) + CORE_PLUS_POOL_COUNT;
+		nTmp = nCount * 12;
+		if (nPoolCount < nTmp) nPoolCount = nTmp;
+		if (!initQueueThread(nCount, nPoolCount)) return false;
+
 		for (i = 0; i < nCount; i++) {
 			pEventThread = new (std::nothrow) CComQueueThread();
 			if (!pEventThread) {
@@ -1127,7 +1087,7 @@ int CCoreList::addScheduler(int nCount, int millisecWait)
 	int idx;
 
 	if (!m_pSchedulerList) {
-		if (!initScheduler(LIST_ADD_COUNT)) {
+		if (!initScheduler(2)) {
 			return -1;
 		}
 	}
@@ -1166,7 +1126,7 @@ int CCoreList::addQueueThread(int nCount)
 	int idx;
 
 	if (!m_pEventThreadList) {
-		if (!initQueueThread(LIST_ADD_COUNT)) return -1;
+		if (!initQueueThread(2)) return -1;
 	}
 
 	CComQueueThread *pEventThread = new (std::nothrow) CComQueueThread();
@@ -1207,6 +1167,7 @@ bool CCoreList::initComThread(int nThreadCount)
 		if (!m_pThreadList->alloc(nThreadCount + LIST_ADD_COUNT, eAlloc_Type_none)) {
 			sprintf(szErrorMsg, "m_pThreadList->alloc(%d)", nThreadCount + LIST_ADD_COUNT);
 			comErrorPrint(szErrorMsg);
+			delete m_pThreadList; m_pThreadList = NULL;
 			return false;
 		}
 	}
@@ -1220,6 +1181,7 @@ bool CCoreList::initLogWriter(int nThreadCount)
 		if (!m_pWriterList->alloc(nThreadCount + LIST_ADD_COUNT, eAlloc_Type_none)) {
 			sprintf(szErrorMsg, "m_pWriterList->alloc(%d)", nThreadCount + LIST_ADD_COUNT);
 			comErrorPrint(szErrorMsg);
+			delete m_pWriterList; m_pWriterList = NULL;
 			return false;
 		}
 	}
@@ -1233,18 +1195,23 @@ bool CCoreList::initScheduler(int nThreadCount, int nSchedulerPoolCount)
 		if (!m_pSchedulerList->alloc(nThreadCount + LIST_ADD_COUNT, eAlloc_Type_none)) {
 			sprintf(szErrorMsg, "m_pSchedulerList->alloc(%d)", nThreadCount + LIST_ADD_COUNT);
 			comErrorPrint(szErrorMsg);
+			delete m_pSchedulerList; m_pSchedulerList = NULL;
 			return false;
 		}
 	}
 	if (nSchedulerPoolCount) {
-		if (!m_pIntervalPool) {
-			m_pIntervalPool = new CMemPool<STIntervalInfo>();
-			if (!m_pIntervalPool->alloc(nSchedulerPoolCount, eAlloc_Type_alloc)) {
-				sprintf(szErrorMsg, "has Failed!! m_pIntervalPool->alloc(%d)\n", nSchedulerPoolCount);
-				comErrorPrint(szErrorMsg);
-				return false;
-			}
+		if (m_pIntervalPool) {
+			if (m_pIntervalPool->GETMAXCOUNT() > nSchedulerPoolCount) return true;
+			else delete m_pIntervalPool;
 		}
+
+		m_pIntervalPool = new CMemPool<STIntervalInfo>();
+		if (!m_pIntervalPool->alloc(nSchedulerPoolCount, eAlloc_Type_alloc)) {
+			sprintf(szErrorMsg, "has Failed!! m_pIntervalPool->alloc(%d)\n", nSchedulerPoolCount);
+			comErrorPrint(szErrorMsg);
+			return false;
+		}
+		
 	}
 	return true;
 }
@@ -1257,21 +1224,88 @@ bool CCoreList::initQueueThread(int nThreadCount, int nQueuePoolCount)
 		if (!m_pEventThreadList->alloc(nThreadCount+LIST_ADD_COUNT, eAlloc_Type_none)) {
 			sprintf(szErrorMsg, "m_pEventThreadList->alloc(%d)", nThreadCount + LIST_ADD_COUNT);
 			comErrorPrint(szErrorMsg);
+			delete m_pEventThreadList; m_pEventThreadList = NULL;
 			return false;
 		}
 	}
-	if (nQueuePoolCount)
-	{
-		if (!m_pEventPool) {
-			m_pEventPool = new CMemPool<STEvent>();
-			if (!m_pEventPool->alloc(nQueuePoolCount, eAlloc_Type_alloc)) {
-				sprintf(szErrorMsg, "has Failed!! m_pEventPool->alloc(%d)\n", nQueuePoolCount);
-				comErrorPrint(szErrorMsg);
-				return false;
-			}
+	if (nQueuePoolCount) {
+		if (m_pEventPool) {
+			if (m_pEventPool->GETMAXCOUNT() > nQueuePoolCount) return true;
+			else delete m_pEventPool;
 		}
-
+		
+		m_pEventPool = new CMemPool<STEvent>();
+		if (!m_pEventPool->alloc(nQueuePoolCount, eAlloc_Type_alloc)) {
+			sprintf(szErrorMsg, "has Failed!! m_pEventPool->alloc(%d)\n", nQueuePoolCount);
+			comErrorPrint(szErrorMsg);
+			return false;
+		}
+		
 	}
 	return true;
+}
+
+
+E_ERROR_CORE CCoreList::putEvent(int nValue, void *pObj, void *pObj2, fp_Proc fp, int nThreadIdx)
+{
+	if (nThreadIdx < 0) {
+		if (m_pEventThreadList) {
+			nThreadIdx = 0;
+		}
+		else {
+			nThreadIdx = addQueueThread(LIST_ADD_COUNT);
+		}
+	}		
+	CComQueueThread *pQueueThread = m_pEventThreadList->getObj(nThreadIdx);
+	if (!pQueueThread) {
+		return eCORE_ERR_QUEUETHREAD_IDX;
+	}
+	STEvent * pEvent = newEvent();
+	if (pEvent) {
+		pEvent->fpProc = fp;
+		pEvent->pObj = pObj;
+		pEvent->pObj2 = pObj2;
+		pEvent->nThreadIdx = nThreadIdx;
+		pEvent->nValue = nValue;
+		if (!pQueueThread->putQueue(pEvent)) {
+			delEvent(pEvent);
+			return eCORE_ERR_PUT_EVENT;
+		}
+		return eCORE_ERR_NONE;
+	}
+	return eCORE_ERR_NEW_EVENT;
+}
+
+
+E_ERROR_CORE CCoreList::putTimer(int nValue, void *pObj, TICKTIME_MILLISEC nInterval, fp_IntervalProc fp, int nThreadIdx)
+{
+	if (nThreadIdx < 0) {
+		if (m_pSchedulerList) {
+			nThreadIdx = 0;
+			// TODO : 같은 nInterval 찾기
+		}
+		else {
+			nThreadIdx = addScheduler(LIST_ADD_COUNT, nInterval);
+		}
+	}
+	CScheduler *pScheduler = m_pSchedulerList->getObj(nThreadIdx);
+	if (!pScheduler) {
+		return eCORE_ERR_SCHEDULER_IDX;
+	}
+	STIntervalInfo * p = newTime();
+	if (p) {
+		p->nInterval = nInterval;
+		p->pObj = NULL;
+		p->pFunction = fp;
+		p->nFlag = 1;
+		p->nGoal = 0;
+		p->nThreadIdx = nThreadIdx;
+		if (!pScheduler->addTime(p))	{
+			gs_pCore->delTime(p);
+			return eCORE_ERR_PUT_TIME;
+		}
+		return eCORE_ERR_NONE;
+	}
+	return eCORE_ERR_NEW_TIME;
 }
 

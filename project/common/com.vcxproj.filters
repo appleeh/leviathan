@@ -63,6 +63,9 @@
     <ClCompile Include="src\comQSort.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="include\com\win32\win32_resource.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\comBMemPool.h">

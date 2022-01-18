@@ -6,6 +6,7 @@
 #include "Analyzer_DateTime.h"
 #include "Analyzer_ExtractNToFile.h"
 #include "Analyzer_KeyValue.h"
+#include "Analyzer_Sequence.h"
 
 
 // TODO List

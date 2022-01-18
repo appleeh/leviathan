@@ -24,6 +24,21 @@ System configration Init
 #include "comTList.h"
 
 typedef void(*fp_Proc)(void *p, void *p2, int n);
+typedef void(*fp_IntervalProc)(void *pObj);
+
+enum E_ERROR_CORE
+{
+	eCORE_ERR_NONE=0,
+	eCORE_ERR_NEW_EVENT,
+	eCORE_ERR_NEW_TIME,
+	eCORE_ERR_PUT_EVENT,
+	eCORE_ERR_PUT_TIME,
+	eCORE_ERR_INITQUEUETHREAD,
+	eCORE_ERR_INITSCHEDULER,
+	eCORE_ERR_SCHEDULER_IDX,
+	eCORE_ERR_QUEUETHREAD_IDX,
+	eCORE_ERR_MAX
+};
 
 enum E_SYS_LIST_TYPE
 {
@@ -38,7 +53,6 @@ enum E_S_FLAG {
 	IS_ACTIVE_PUT_QUEUE = 0x00000004,
 	IS_ACTIVE_TIMEPROC_INTHREAD = 0x00000008
 };
-typedef void(*fp_IntervalProc)(void *pObj);
 
 struct STIntervalInfo
 {
@@ -190,15 +204,21 @@ public:
 	bool start();
 	void destroy();
 	
-	inline STIntervalInfo * newTime() { return m_pIntervalPool->newMem(); }
-	inline STEvent * newEvent() { return m_pEventPool->newMem(); }
-	inline bool delTimer(STIntervalInfo *p) { return m_pIntervalPool->delMem(p); }
-	inline bool delEvent(STEvent *p) { return m_pEventPool->delMem(p); }
 
-	bool putEvent(STEvent *p);
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	// TODO : delete
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	bool putEvent(STEvent *p); // 
 	bool putTimer(STIntervalInfo *p);
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	E_ERROR_CORE putTimer(int nValue, void *pObj, TICKTIME_MILLISEC nInterval, fp_IntervalProc fp, int nThreadIdx=-1);
+	E_ERROR_CORE putEvent(int nValue, void *pObj, void *pObj2, fp_Proc fp, int nThreadIdx = -1);
+	inline STIntervalInfo * CCoreList::newTime() { if (m_pIntervalPool) return m_pIntervalPool->newMem(); return new STIntervalInfo; }
+	inline STEvent * CCoreList::newEvent() {if (m_pEventPool) return m_pEventPool->newMem(); return new STEvent;}
 	inline bool popTimer(STIntervalInfo *p) { p->nFlag = 0; }
 
+	inline void CCoreList::delTime(STIntervalInfo *p) {m_pIntervalPool->delMem(p);}
+	inline void CCoreList::delEvent(STEvent *p) {m_pEventPool->delMem(p);}
 
 	inline bool isLogWriter() { if (m_pWriterList) return true; return false; }
 	inline bool isScheduler() { if (m_pSchedulerList) return true; return false;	}
@@ -219,8 +239,8 @@ public:
 
 	bool initComThread(int nThreadCount);
 	bool initLogWriter(int nThreadCount);
-	bool initScheduler(int nThreadCount, int nSchedulerPoolCount=0);
-	bool initQueueThread(int nThreadCount, int nQueuePoolCount=0);
+	bool initScheduler(int nThreadCount, int nSchedulerPoolCount=12);
+	bool initQueueThread(int nThreadCount, int nQueuePoolCount=12);
 	
 	void setListAllocType(E_ALLOC_TYPE type, E_SYS_LIST_TYPE eListType);
 

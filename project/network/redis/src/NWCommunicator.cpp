@@ -20,6 +20,7 @@ bool CNWCommunicator::IsConnected(int nSIdx)
 	return m_cRedis.Connected();
 }
 
+
 bool  CNWCommunicator::ConnectToServer(char *pIP, int nPort, int timeoutMillisecons, int nSevIdx)
 {
 	struct timeval timeout;

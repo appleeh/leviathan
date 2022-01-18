@@ -7,7 +7,7 @@ namespace common {
 /*#undef unix*/
 namespace unix_na {
 
-	int get_usage_percent(char * dev_path);
+	int get_storage_usage(char * dev_path);
 	int get_mem_info(unsigned long *totMem, unsigned long *usedMem);
 
 	int initInterface();
@@ -17,11 +17,10 @@ namespace unix_na {
 
 	int getConnectionCount(int nPort);
 
-
-	void initCPU_machine();
-	int getUsageCPU_machine();
-	void initCPU_process();
-	int getUsageCPU_process();
+	void init_cpu_machine();
+	void init_cpu_process();
+	int get_cpu_usage_machine();
+	int get_cpu_usage_process();
 } // namespace unix
 } // namespace common
 

@@ -165,6 +165,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="include\com\win32\win32_mtsync.cpp" />
+    <ClCompile Include="include\com\win32\win32_resource.cpp" />
     <ClCompile Include="src\comBufPool.cpp" />
     <ClCompile Include="src\comCore.cpp" />
     <ClCompile Include="src\comDateTime.cpp" />

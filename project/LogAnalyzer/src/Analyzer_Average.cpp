@@ -73,7 +73,7 @@ bool CAnalyzer_Average::parsingLine(char *pLine)
 	}
 
 FIND_SUCCESS :
-	nValue = getInterval(pPos, pStruct->pKeyword);
+	nValue = getIntValue(pPos, pStruct->pKeyword);
 	pInterval = &pStruct->stInterval;
 	pInterval->nInterval[pInterval->nIntervalIdx++] = nValue * 1.0f;
 	if (pInterval->nIntervalIdx == AVG_COUNT) {

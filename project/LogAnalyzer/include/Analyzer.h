@@ -15,6 +15,7 @@ enum E_ANLYSOR_TYPE
 	eAType_DateTime,
 	eAType_BetweenLines,
 	eAType_Average,
+	eAType_Sequence,
 	eAType_Max
 };
 
